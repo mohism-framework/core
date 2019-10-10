@@ -1,0 +1,20 @@
+{
+  "name": "@mohism/core",
+  "version": "0.1.1",
+  "description": "some libs of mohism",
+  "main": "./dist/main.js",
+  "scripts": {
+    "lint": "npx eslint ./src/*.** --fix",
+    "build": "npx tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lanhao",
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.3.3",
+    "@typescript-eslint/parser": "^2.3.3",
+    "eslint": "^6.5.1",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.3"
+  }
+}
