@@ -21,7 +21,6 @@ const validate = (ctx: Context | any, rules: Dict<IDefinition>): Dict<any> => {
   const result: Dict<any> = {};
   Object.keys(rules).forEach((key: string): void => {
     const { data } = rules[key];
-    console.log(data);
     if (data.required && (!data.optional) && (undefined === sources[data.in][data.name])) {
       throw new MohismErr(`Required ${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name}`).statusCode(400);
     }
@@ -113,6 +112,10 @@ const toType = (raw: any, type: EL_TYPE): any => {
 
 export default interface IHandler {
   /**
+   * 名字了啦
+   */
+  name(): string;
+  /**
    * 入参定义
    */
   params(): Dict<IDefinition>;
@@ -137,36 +140,19 @@ export default interface IHandler {
 export const magicMount = (router: Router, handler: IHandler): void => {
   const path = (handler.group() ? `/${handler.group()}/${handler.path()}` : `/${handler.path()}`).replace(/\/\//g, '/');
   const method = handler.method();
-  switch (method) {
-    case HTTP_METHODS.GET:
-      router.get(path, async ctx => {
-        const params = validate(ctx, handler.params());
-        const rs = await handler.run(params);
-        ctx.success(rs);
-      });
-      break;
-    case HTTP_METHODS.POST:
-      router.post(path, async ctx => {
-        const params = validate(ctx, handler.params());
-        const rs = await handler.run(params);
-        ctx.success(rs);
-      });
-      break;
-    case HTTP_METHODS.PUT:
-      router.put(path, async ctx => {
-        const params = validate(ctx, handler.params());
-        const rs = await handler.run(params);
-        ctx.success(rs);
-      });
-      break;
-    case HTTP_METHODS.DELETE:
-      router.delete(path, async ctx => {
-        const params = validate(ctx, handler.params());
-        const rs = await handler.run(params);
-        ctx.success(rs);
-      });
-      break;
-    default:
-      break;
+  const M: { [index: number]: any } = {
+    [HTTP_METHODS.GET]: router.get.bind(router),
+    [HTTP_METHODS.POST]: router.post.bind(router),
+    [HTTP_METHODS.PUT]: router.put.bind(router),
+    [HTTP_METHODS.DELETE]: router.delete.bind(router),
+  };
+  if (!M[method]) {
+    throw new MohismErr(`Method NOT allows: ${HTTP_METHODS[method]}`).statusCode(400);
   }
+  
+  M[method](path, async (ctx: Context) => {
+    const params = validate(ctx, handler.params());
+    const rs = await handler.run(params);
+    ctx.success(rs);
+  });
 }
