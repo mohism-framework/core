@@ -19,5 +19,4 @@ export enum EL_TYPE {
   NUMBER = 1,
   STRING,
   BOOLEAN,
-  EMAIL,
 }

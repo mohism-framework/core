@@ -26,9 +26,4 @@ export default class TypePicker implements IDefinition {
     this.data.type = EL_TYPE.BOOLEAN;
     return new CommonDefinition(this.data);
   }
-
-  email():StringDefinition{
-    this.data.type = EL_TYPE.EMAIL;
-    return new StringDefinition(this.data).contains('@');
-  }
 }
