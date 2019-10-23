@@ -16,7 +16,8 @@ const validate = (ctx: Context | any, rules: Dict<IDefinition>): Dict<any> => {
   sources[HTTP_PARAM_LOCATION.HEADERS] = ctx.request.header;
   sources[HTTP_PARAM_LOCATION.QUERY] = ctx.request.query as Dict<any>;
 
-  const path: string = ctx.request.path;
+  // const path: string = ctx.request.path;
+  // todo params in path
 
   const result: Dict<any> = {};
   Object.keys(rules).forEach((key: string): void => {
@@ -86,31 +87,31 @@ const validate = (ctx: Context | any, rules: Dict<IDefinition>): Dict<any> => {
   });
 
   return result;
-}
+};
 
 const toType = (raw: any, type: EL_TYPE): any => {
   if (!raw) {
     return raw;
   }
   switch (type) {
-    case EL_TYPE.NUMBER:
-      if (Number.isNaN(+raw)) {
-        return new Error();
-      }
-      return +raw;
-    case EL_TYPE.STRING:
-      return `${raw}`;
-    case EL_TYPE.BOOLEAN:
-      if (!['true', 'false', true, false].includes(raw)) {
-        return new Error();
-      }
-      return raw === 'true' ? true : false;
-    default:
-      return raw;
+  case EL_TYPE.NUMBER:
+    if (Number.isNaN(+raw)) {
+      return new Error();
+    }
+    return +raw;
+  case EL_TYPE.STRING:
+    return `${raw}`;
+  case EL_TYPE.BOOLEAN:
+    if (!['true', 'false', true, false].includes(raw)) {
+      return new Error();
+    }
+    return raw === 'true' ? true : false;
+  default:
+    return raw;
   }
-}
+};
 
-export default interface IHandler {
+interface IHandler {
   /**
    * 名字了啦
    */
@@ -155,4 +156,6 @@ export const magicMount = (router: Router, handler: IHandler): void => {
     const rs = await handler.run(params);
     ctx.success(rs);
   });
-}
+};
+
+export default IHandler;

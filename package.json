@@ -4,7 +4,7 @@
   "description": "some libs of mohism",
   "main": "./dist/main.js",
   "scripts": {
-    "lint": "npx eslint ./src/*.** --fix",
+    "lint": "npx eslint src/**/*.ts --fix",
     "build": "npx tsc",
     "test": "exit 0"
   },
@@ -22,5 +22,17 @@
     "@types/koa-router": "^7.0.42",
     "koa": "^2.8.2",
     "koa-router": "^7.4.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohism-framework/core.git"
+  },
+  "keywords": [
+    "mohism",
+    "core"
+  ],
+  "bugs": {
+    "url": "https://github.com/mohism-framework/core/issues"
+  },
+  "homepage": "https://github.com/mohism-framework/core#readme"
 }
