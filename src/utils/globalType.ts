@@ -1,6 +1,3 @@
-export type Dict<T> = {
-  [index: string]: T;
-}
 
 export type MohismConf = {
   appId?: number | undefined;

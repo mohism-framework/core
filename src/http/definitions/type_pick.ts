@@ -1,5 +1,5 @@
 import {IDefinition} from './iDefinition';
-import { Dict } from '../../utils/globalType';
+import { Dict } from '@mohism/utils';
 import StringDefinition from './string.def';
 import { EL_TYPE } from '../constant';
 import NumberDefinition from './number.def';

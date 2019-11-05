@@ -1,4 +1,4 @@
-import { Dict } from '../../utils/globalType';
+import { Dict } from '@mohism/utils';
 import CommonDefinition from './common.def';
 import { IDefinition } from './iDefinition';
 

@@ -1,5 +1,5 @@
 import { IDefinition } from "./iDefinition";
-import { Dict } from '../../utils/globalType';
+import { Dict } from '@mohism/utils';
 import LocationPick from './location_pick';
 
 export default class NamePick implements IDefinition {

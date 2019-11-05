@@ -4,7 +4,7 @@
  * 在处理参数阶段，会抹平http细节，以便测试时不需要完整mock请求
  */
 import { HTTP_METHODS, HTTP_PARAM_LOCATION, EL_TYPE } from './constant/index';
-import { Dict } from '../utils/globalType';
+import { Dict } from '@mohism/utils';
 import { IDefinition } from './definitions/iDefinition';
 import Router from 'koa-router';
 import { Context } from 'koa';
