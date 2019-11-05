@@ -1,19 +1,25 @@
 {
   "name": "@mohism/core",
-  "version": "0.1.16",
+  "version": "0.2.0",
   "description": "some libs of mohism",
   "main": "./dist/main.js",
   "scripts": {
     "lint": "npx eslint src/**/*.ts --fix",
-    "build": "npx tsc",
-    "test": "exit 0"
+    "build": "npx eslint src/**/*.ts --fix && npx tsc",
+    "test": "npx mocha --require ts-node/register tests/**/*.ts",
+    "cover": "npx nyc mocha --require ts-node/register tests/**/*.ts"
   },
   "author": "lanhao",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^12.12.5",
     "@typescript-eslint/eslint-plugin": "^2.3.3",
     "@typescript-eslint/parser": "^2.3.3",
+    "chai": "^4.2.0",
     "eslint": "^6.5.1",
+    "mocha": "^6.2.2",
+    "nodemon": "^1.19.4",
+    "nyc": "^14.1.1",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
   },
