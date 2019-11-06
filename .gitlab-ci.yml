@@ -1,0 +1,18 @@
+stages:
+  - test
+
+job_test:
+  stage: test
+  tags:
+    - github
+  image: registry.cn-hangzhou.aliyuncs.com/tik/node:tik
+  cache:
+    untracked: true
+    key: mohism_utils
+    policy: push
+  only:
+    - master
+  script:
+    - env
+    - npm i
+    - npm test
