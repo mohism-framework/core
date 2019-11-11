@@ -1,6 +1,6 @@
 import { Context, Middleware } from 'koa';
-import { MohismConf, UnifiedResponse } from '../../utils/globalType';
-import MohismErr from '../../utils/mohismError';
+import { MohismConf, UnifiedResponse } from '../../utils/global-type';
+import MohismErr from '../../utils/mohism-error';
 import { resolve } from 'path';
 
 const mohismConf: MohismConf = require(resolve(`${process.cwd()}/mohism.json`));

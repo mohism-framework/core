@@ -8,7 +8,7 @@ import { Dict } from '@mohism/utils';
 import { IDefinition } from './definitions/iDefinition';
 import Router from 'koa-router';
 import { Context } from 'koa';
-import MohismErr from '../utils/mohismError';
+import MohismErr from '../utils/mohism-error';
 
 const validate = (ctx: Context | any, rules: Dict<IDefinition>): Dict<any> => {
   const sources: Dict<any> = {};
