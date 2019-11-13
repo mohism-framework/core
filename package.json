@@ -1,6 +1,6 @@
 {
   "name": "@mohism/core",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "some libs of mohism",
   "main": "./dist/main.js",
   "scripts": {
