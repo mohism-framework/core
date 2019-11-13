@@ -1,12 +1,14 @@
 
+export type AppMeta = {
+  appId: number,
+  name: string
+};
+
 export type MohismConf = {
   appId?: number | undefined;
   name?: string;
   type?: string;
-  children: Array<{
-    appId: number,
-    name: string
-  }>;
+  children?: Array<AppMeta>;
 }
 
 export type UnifiedResponse = {
