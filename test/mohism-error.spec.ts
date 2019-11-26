@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import MohismError from '../src/utils/mohism-error';
+import { MohismError } from '../src';
 
 describe('mohism-error-test', () => {
   it('base', () => {

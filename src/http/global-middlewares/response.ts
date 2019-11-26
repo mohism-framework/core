@@ -1,6 +1,6 @@
 import { Context, Middleware } from 'koa';
 import { MohismConf, UnifiedResponse } from '../../utils/global-type';
-import MohismErr from '../../utils/mohism-error';
+import MohismError from '../../utils/mohism-error';
 import { resolve } from 'path';
 
 const mohismConf: MohismConf = require(resolve(`${process.cwd()}/mohism.json`));
@@ -20,7 +20,7 @@ export default (): Middleware => {
       ctx.body = body;
     };
 
-    ctx.error = (err: MohismErr | Error | UnifiedResponse | any, extra: any = {}) => {
+    ctx.error = (err: MohismError | Error | UnifiedResponse | any, extra: any = {}) => {
       let specStatus = 500;
       if (err.status) {
         specStatus = err.status;

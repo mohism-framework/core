@@ -59,7 +59,6 @@
     "src/**/*"
   ],
   "exclude": [
-    "./dist",
-    "./templates"
+    "./dist"
   ]
 }
