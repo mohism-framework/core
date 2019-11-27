@@ -3,10 +3,12 @@
  */
 import { Context, Middleware } from 'koa';
 
+import { NextFn } from '../constant';
+
 export default (): Middleware => {
-  return async (ctx: Context, next: () => Promise<any>): Promise<any> => {
+  return async (ctx: Context, next: NextFn): Promise<any> => {
     try {
-      return await next();
+      return next();
     } catch (err) {
       return ctx.error(err);
     }

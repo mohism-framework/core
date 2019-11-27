@@ -20,3 +20,5 @@ export enum EL_TYPE {
   STRING,
   BOOLEAN,
 }
+
+export type NextFn = () => Promise<any>;

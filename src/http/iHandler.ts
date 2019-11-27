@@ -3,12 +3,13 @@
  * IHandler 会定义http中的各种信息，并自动注册到应用路由
  * 在处理参数阶段，会抹平http细节，以便测试时不需要完整mock请求
  */
-import { HTTP_METHODS, HTTP_PARAM_LOCATION, EL_TYPE } from './constant/index';
 import { Dict } from '@mohism/utils';
-import { IDefinition } from './definitions/iDefinition';
+import { Context, Middleware } from 'koa';
 import Router from 'koa-router';
-import { Context } from 'koa';
+
 import MohismErr from '../utils/mohism-error';
+import { EL_TYPE, HTTP_METHODS, HTTP_PARAM_LOCATION } from './constant';
+import { IDefinition } from './definitions/iDefinition';
 
 const validate = (ctx: Context | any, rules: Dict<IDefinition>): Dict<any> => {
   const sources: Dict<any> = {};
@@ -25,11 +26,15 @@ const validate = (ctx: Context | any, rules: Dict<IDefinition>): Dict<any> => {
     if (data.required && (!data.optional) && (undefined === sources[data.in][data.name])) {
       throw new MohismErr(`Required ${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name}`).statusCode(400);
     }
-    const value = toType(sources[data.in][data.name], data.type);
+    let value = toType(sources[data.in][data.name], data.type);
     const defaultValue = toType(data.default, data.type);
 
     if (value instanceof Error) {
       throw new MohismErr(`${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name} must be ${EL_TYPE[data.type]}`).statusCode(400);
+    }
+
+    if (value === undefined) {
+      value = defaultValue;
     }
 
     // validation 
@@ -111,15 +116,26 @@ const toType = (raw: any, type: EL_TYPE): any => {
   }
 };
 
-interface IHandler {
+export interface IMiddleware {
+  /**
+   * 入参定义
+   */
+  params(): Dict<IDefinition>;
+  /**
+   * 接口逻辑，返回的结构会进一步包装给ctx
+   */
+  run(params: Dict<any>): Promise<any>;
+}
+
+export interface IHandler extends IMiddleware {
   /**
    * 名字了啦
    */
   name(): string;
   /**
-   * 入参定义
+   * 指定的中间件
    */
-  params(): Dict<IDefinition>;
+  middlewares(): Array<IMiddleware>;
   /**
    * 请求方法
    */
@@ -132,10 +148,6 @@ interface IHandler {
    * url
    */
   path(): string;
-  /**
-   * 接口逻辑，返回的结构会进一步包装给ctx
-   */
-  run(params: Dict<any>): Promise<any>;
 }
 
 export const magicMount = (router: Router, handler: IHandler): void => {
@@ -150,12 +162,20 @@ export const magicMount = (router: Router, handler: IHandler): void => {
   if (!M[method]) {
     throw new MohismErr(`Method NOT allows: ${HTTP_METHODS[method]}`).statusCode(400);
   }
-  
-  M[method](path, async (ctx: Context) => {
-    const params = validate(ctx, handler.params());
-    const rs = await handler.run(params);
-    ctx.success(rs);
-  });
+
+  // 把中间件和handler一起注册
+  const resty: Array<Middleware> = [
+    ...(handler.middlewares().map((item: IMiddleware) => {
+      return item.run.bind(item);
+    })),
+    async (ctx: Context) => {
+      const params = validate(ctx, handler.params());
+      const rs = await handler.run(params);
+      ctx.success(rs);
+    },
+  ];
+
+  M[method](path, ...resty);
 };
 
 export default IHandler;

@@ -2,6 +2,7 @@ import { Context, Middleware } from 'koa';
 import { MohismConf, UnifiedResponse } from '../../utils/global-type';
 import MohismError from '../../utils/mohism-error';
 import { resolve } from 'path';
+import { NextFn } from '../constant';
 
 const mohismConf: MohismConf = require(resolve(`${process.cwd()}/mohism.json`));
 /**
@@ -9,7 +10,7 @@ const mohismConf: MohismConf = require(resolve(`${process.cwd()}/mohism.json`));
  *
  */
 export default (): Middleware => {
-  return async (ctx: Context, next: () => Promise<any>): Promise<any> => {
+  return async (ctx: Context, next: NextFn): Promise<any> => {
     const { appId = 1000 } = mohismConf;
     ctx.success = (data: any) => {
       const body: UnifiedResponse = {
