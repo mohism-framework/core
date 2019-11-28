@@ -11,7 +11,7 @@ export enum HTTP_PARAM_LOCATION {
   BODY = 1,
   QUERY,
   HEADERS,
-  PATH,
+  PARAM,
 }
 
 export type NextFn = () => Promise<any>;
@@ -19,5 +19,5 @@ export type NextFn = () => Promise<any>;
 export type HttpConf = {
   host: string;
   port: number;
-  cors: boolean;
+  cors?: boolean;
 }

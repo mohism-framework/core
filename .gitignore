@@ -4,3 +4,4 @@ tsconfig.tsbuildinfo
 .nyc_output
 coverage
 .eslintcache
+./test.ts

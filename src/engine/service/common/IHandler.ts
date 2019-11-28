@@ -1,11 +1,13 @@
-import { IParam } from './IParam';
 import { Dict } from '@mohism/utils';
+import { IDefinition } from './param-definition/IDefinition';
+
+
 
 export interface IMiddleware {
   /**
      * 入参定义
      */
-  params(): IParam;
+  params(): Dict<IDefinition>;
   /**
    * 执行的函数
    * @param params {Dict<any>}
@@ -24,3 +26,5 @@ export interface IHandler extends IMiddleware {
    */
   middlewares(): Array<IMiddleware>;
 }
+
+export default IHandler;

@@ -1,7 +1,8 @@
 import { HTTP_METHODS } from './constant';
 import { Dict } from '@mohism/utils';
-import { Excutable } from '../common/type';
+
 import MohismError from '../../../utils/mohism-error';
+import { IHandler } from '../common/IHandler';
 
 /**
  * tree base route
@@ -9,7 +10,7 @@ import MohismError from '../../../utils/mohism-error';
 
 export type Layer = {
   name: string;
-  handler?: Excutable;
+  handler?: IHandler;
   next: Dict<Layer>;
 }
 
@@ -18,10 +19,10 @@ export type Layer = {
  * @param steps {Array<string>} must contains atleast one element
  * @param layerDict 
  */
-const fetchRecurse = (steps: Array<string>, layerDict: Dict<Layer>): Excutable | undefined => {
+const fetchRecurse = (steps: Array<string>, layerDict: Dict<Layer>): IHandler | undefined => {
   const step: string = steps[0];
-  
-  let result: Excutable | undefined = undefined;
+
+  let result: IHandler | undefined = undefined;
   if (layerDict[step]) {
     const [, ...restSteps] = steps;
     if (restSteps.length === 0) {
@@ -34,15 +35,15 @@ const fetchRecurse = (steps: Array<string>, layerDict: Dict<Layer>): Excutable |
   if (layerDict['*']) {
     const [, ...restSteps] = steps;
     if (restSteps.length === 0) {
-      result =  layerDict['*'].handler;
-    }else{
+      result = layerDict['*'].handler;
+    } else {
       result = result || fetchRecurse(restSteps, layerDict['*'].next);
     }
   }
   return result;
 }
 
-class Router {
+export class Router {
   private tree: Dict<Layer>;
   constructor() {
     this.tree = {};
@@ -52,9 +53,9 @@ class Router {
    * 
    * @param method {HTTP_METHODS}
    * @param url {string}
-   * @param fn {}
+   * @param handler {IHandler}
    */
-  register(method: HTTP_METHODS, url: string, fn: Excutable) {
+  register(method: HTTP_METHODS, url: string, handler: IHandler) {
     const steps: Array<string> = [HTTP_METHODS[method], ...(url.split('/'))];
     let tree: Dict<Layer> = this.tree;
     steps.forEach((step: string, index: number) => {
@@ -67,18 +68,18 @@ class Router {
       tree[step] = tree[step] || { name: step, next: {} };
 
       if (index === steps.length - 1) {
-        tree[step].handler = fn;
+        tree[step].handler = handler;
       } else {
         tree = tree[step].next as Dict<Layer>;
       }
     });
   }
 
-  fetch(method: HTTP_METHODS, url: string): Excutable | undefined {
-    const steps: Array<string> = [HTTP_METHODS[method], ...(url.split('/').filter(item => item != ''))];
+  fetch(method: string, url: string): IHandler | undefined {
+    const steps: Array<string> = [method, ...(url.split('/').filter(item => item != ''))];
     let tree: Dict<Layer> = this.tree;
 
-    const result: Excutable | undefined = fetchRecurse(steps, tree);
+    const result: IHandler | undefined = fetchRecurse(steps, tree);
     if (result === undefined) {
       throw new MohismError('not found').statusCode(404);
     }
