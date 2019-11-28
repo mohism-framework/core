@@ -10,6 +10,7 @@
   "exclude": [
     "coverage/**",
     "node_modules/**",
+    "src/http/*",
     "**/*.d.ts",
     "**/*.spec.ts"
   ],
