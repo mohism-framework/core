@@ -1,10 +1,10 @@
 import { Dict } from '@mohism/utils';
 
+import MohismError from '../../../utils/mohism-error';
 import { EL_TYPE } from '../common/constant';
 import { IDefinition } from '../common/param-definition/IDefinition';
 import { IContext } from '../http/paramParser/IContext';
 import { HTTP_PARAM_LOCATION } from './constant';
-import MohismError from '../../../utils/mohism-error';
 
 export const validate = (ctx: IContext, rules: Dict<IDefinition>): Dict<any> => {
   const sources: Dict<any> = {};
@@ -81,13 +81,13 @@ export const validate = (ctx: IContext, rules: Dict<IDefinition>): Dict<any> => 
         throw new MohismError(`Validation Error: ${data.name} must contains "${data.contains}"`).statusCode(400);
       }
     }
-    result[key] = value === undefined ? defaultValue : value;
+    result[key] = value;
   });
 
   return result;
 };
 
-const toType = (raw: any, type: EL_TYPE): any => {
+export const toType = (raw: any, type: EL_TYPE): any => {
   if (!raw) {
     return raw;
   }
@@ -103,8 +103,6 @@ const toType = (raw: any, type: EL_TYPE): any => {
       if (!['true', 'false', true, false].includes(raw)) {
         return new Error();
       }
-      return raw === 'true' ? true : false;
-    default:
-      return raw;
+      return (raw === 'true' || raw === true) ? true : false;
   }
 };

@@ -17,7 +17,8 @@ export enum HTTP_PARAM_LOCATION {
 export type NextFn = () => Promise<any>;
 
 export type HttpConf = {
-  host: string;
-  port: number;
+  host?: string;
+  port?: number;
   cors?: boolean;
+  verbose?: boolean;
 }

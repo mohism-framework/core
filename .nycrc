@@ -1,4 +1,5 @@
 {
+  "ignore-class-method": "listen",
   "cache": false,
   "check-coverage": false,
   "extension": [

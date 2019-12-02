@@ -4,10 +4,10 @@ import { IContext, IIncoming } from './IContext';
 import MohismError from '../../../../utils/mohism-error';
 
 const parseBody = (inc: IIncoming): Dict<any> => {
-  if (inc.body.length === 0) {
+  if (!inc.body || inc.body.length === 0) {
     return {};
   }
-  if ((inc.headers['content-type'] as string).includes('json')) {
+  if ((inc.headers['content-type'] === undefined) || (inc.headers['content-type'] as string).includes('json')) {
     try {
       return JSON.parse(inc.body);
     } catch {

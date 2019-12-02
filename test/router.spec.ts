@@ -1,19 +1,39 @@
 import { describe, it } from 'mocha';
-import { Route } from '../src/engine/service/http/router';
+import { Route, colorfy } from '../src/engine/service/http/router';
 import { HTTP_METHODS } from '../src/engine/service/http/constant';
 import { assert, expect } from 'chai';
 import { IHandler } from '../src/engine/service/common/IHandler';
-import {IDefinition} from '../src/engine/service/common/param-definition/IDefinition';
+import { IDefinition } from '../src/engine/service/common/param-definition/IDefinition';
 import { Dict } from '@mohism/utils';
+import { green, yellow, cyan, red } from 'colors';
 
 const fn: IHandler = {
+  name: () => '',
   path: () => '',
   middlewares: () => [],
   params: () => { return {} as Dict<IDefinition> },
-  run: async () => { }
+  run: async () => { return 'ok' }
 };
 
 describe('router', () => {
+  it('router::color', () => {
+    assert.deepEqual([
+      colorfy('HEAD'),
+      colorfy('GET'),
+      colorfy('POST'),
+      colorfy('PUT'),
+      colorfy('DELETE'),
+      colorfy('OPTION'),
+    ],[
+      green('HEAD'),
+      green('GET'),
+      yellow('POST'),
+      cyan('PUT'),
+      red('DELETE'),
+      'OPTION'
+    ]);
+  });
+
   it('router::add', () => {
     const r = Route();
 

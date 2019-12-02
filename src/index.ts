@@ -12,4 +12,4 @@ export { default as GrpcPick } from './engine/service/grpc/paramsDefinition/grpc
 export { IDefinition } from './engine/service/common/param-definition/IDefinition';
 
 export { EL_TYPE } from './engine/service/common/constant';
-export { NextFn, HTTP_METHODS, HTTP_PARAM_LOCATION } from './engine/service/http/constant';
+export { NextFn, HTTP_METHODS, HTTP_PARAM_LOCATION, HttpConf } from './engine/service/http/constant';

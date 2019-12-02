@@ -3,6 +3,7 @@ import { Dict } from '@mohism/utils';
 
 import MohismError from '../../../utils/mohism-error';
 import { IHandler } from '../common/IHandler';
+import { green, yellow, cyan, red } from 'colors';
 
 /**
  * tree base route
@@ -93,4 +94,20 @@ export class Router {
 
 export const Route = (): Router => {
   return new Router();
+}
+
+export const colorfy = (method: string): string => {
+  switch (method) {
+    case 'GET':
+    case 'HEAD':
+      return green(method);
+    case 'POST':
+      return yellow(method);
+    case 'PUT':
+      return cyan(method);
+    case 'DELETE':
+      return red(method);
+    default:
+      return method;
+  }
 }

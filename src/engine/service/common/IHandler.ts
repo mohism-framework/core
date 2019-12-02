@@ -4,6 +4,7 @@ import { IDefinition } from './param-definition/IDefinition';
 
 
 export interface IMiddleware {
+  name(): string;
   /**
      * 入参定义
      */
