@@ -13,6 +13,5 @@ job_test:
   only:
     - master
   script:
-    - env
     - npm i
     - npm test

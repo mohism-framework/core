@@ -13,6 +13,7 @@ import { IContext, IIncoming } from './paramParser/IContext';
 import { colorfy, Router } from './router';
 import { validate } from './validate';
 import { IHandler } from '../common/IHandler';
+import { HTTP_STATUS } from './statusCode';
 
 export class HttpApplication implements IApplication {
   private server: Server | null;
@@ -85,9 +86,9 @@ export class HttpApplication implements IApplication {
               res.statusCode = e.status;
               res.end(JSON.stringify(e.output()));
             } else {
-              res.statusCode = 500;
+              res.statusCode = HTTP_STATUS.InternalServerError;
               res.end(JSON.stringify({
-                code: 500,
+                code: res.statusCode,
                 message: e.message,
               }))
             }
@@ -101,9 +102,9 @@ export class HttpApplication implements IApplication {
             res.statusCode = e.status;
             res.end(JSON.stringify(e.output()));
           } else {
-            res.statusCode = 500;
+            res.statusCode = HTTP_STATUS.InternalServerError;
             res.end(JSON.stringify({
-              code: 500,
+              code: res.statusCode,
               message: e.message,
             }))
           }

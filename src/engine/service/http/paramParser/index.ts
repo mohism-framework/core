@@ -2,6 +2,7 @@ import { Dict } from '@mohism/utils';
 
 import { IContext, IIncoming } from './IContext';
 import MohismError from '../../../../utils/mohism-error';
+import { HTTP_STATUS } from '../statusCode';
 
 const parseBody = (inc: IIncoming): Dict<any> => {
   if (!inc.body || inc.body.length === 0) {
@@ -11,10 +12,10 @@ const parseBody = (inc: IIncoming): Dict<any> => {
     try {
       return JSON.parse(inc.body);
     } catch {
-      throw new MohismError('bad request, invalid json').statusCode(400);
+      throw new MohismError('bad request, invalid json').statusCode(HTTP_STATUS.UnprocessableEntity);
     }
   }
-  throw new MohismError('bad request, only support application/json').statusCode(400);
+  throw new MohismError('bad request, only support application/json').statusCode(HTTP_STATUS.UnsupportedMediaType);
 }
 
 const parseQuery = (inc: IIncoming): Dict<any> => {

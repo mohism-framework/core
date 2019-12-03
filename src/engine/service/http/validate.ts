@@ -5,6 +5,7 @@ import { EL_TYPE } from '../common/constant';
 import { IDefinition } from '../common/param-definition/IDefinition';
 import { IContext } from '../http/paramParser/IContext';
 import { HTTP_PARAM_LOCATION } from './constant';
+import { HTTP_STATUS } from './statusCode';
 
 export const validate = (ctx: IContext, rules: Dict<IDefinition>): Dict<any> => {
   const sources: Dict<any> = {};
@@ -18,13 +19,13 @@ export const validate = (ctx: IContext, rules: Dict<IDefinition>): Dict<any> => 
     const { data } = rules[key];
 
     if (data.required && (!data.optional) && (undefined === sources[data.in][data.name])) {
-      throw new MohismError(`Required ${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name}`).statusCode(400);
+      throw new MohismError(`Required ${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name}`).statusCode(HTTP_STATUS.BadRequest);
     }
     let value = toType(sources[data.in][data.name], data.type);
     const defaultValue = toType(data.default, data.type);
 
     if (value instanceof Error) {
-      throw new MohismError(`${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name} must be ${EL_TYPE[data.type]}`).statusCode(400);
+      throw new MohismError(`${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name} must be ${EL_TYPE[data.type]}`).statusCode(HTTP_STATUS.BadRequest);
     }
 
     if (value === undefined) {
@@ -34,36 +35,36 @@ export const validate = (ctx: IContext, rules: Dict<IDefinition>): Dict<any> => 
     // validation 
     // length   
     if (data.length !== undefined && !(value.length >= data.length[0] && value.length <= data.length[1])) {
-      throw new MohismError(`Validation Error: ${data.name} length must in ${JSON.stringify(data.length)}`).statusCode(400);
+      throw new MohismError(`Validation Error: ${data.name} length must in ${JSON.stringify(data.length)}`).statusCode(HTTP_STATUS.BadRequest);
     }
     // range
     if (data.range !== undefined) {
       if (data.range.min) {
         if (data.range.min.e && !(value >= data.range.min.n)) {
-          throw new MohismError(`Validation Error: ${data.name} must gte ${data.range.min.n}`).statusCode(400);
+          throw new MohismError(`Validation Error: ${data.name} must gte ${data.range.min.n}`).statusCode(HTTP_STATUS.BadRequest);
         } else if (!(value > data.range.min.n)) {
-          throw new MohismError(`Validation Error: ${data.name} must gt ${data.range.min.n}`).statusCode(400);
+          throw new MohismError(`Validation Error: ${data.name} must gt ${data.range.min.n}`).statusCode(HTTP_STATUS.BadRequest);
         }
       }
       if (data.range.max) {
         if (data.range.max.e && !(value <= data.range.max.n)) {
-          throw new MohismError(`Validation Error: ${data.name} must lte ${data.range.max.n}`).statusCode(400);
+          throw new MohismError(`Validation Error: ${data.name} must lte ${data.range.max.n}`).statusCode(HTTP_STATUS.BadRequest);
         } else if (!(value < data.range.max.n)) {
-          throw new MohismError(`Validation Error: ${data.name} must lt ${data.range.max.n}`).statusCode(400);
+          throw new MohismError(`Validation Error: ${data.name} must lt ${data.range.max.n}`).statusCode(HTTP_STATUS.BadRequest);
         }
       }
     }
     // choices
     if (data.choices !== undefined && !data.choices.includes(value)) {
-      throw new MohismError(`Validation Error: ${data.name} must be one of ${JSON.stringify(data.choices)}`).statusCode(400);
+      throw new MohismError(`Validation Error: ${data.name} must be one of ${JSON.stringify(data.choices)}`).statusCode(HTTP_STATUS.BadRequest);
     }
     // excludes
     if (data.excludes !== undefined && data.excludes.includes(value)) {
-      throw new MohismError(`Validation Error: ${data.name} should NOT be one of ${JSON.stringify(data.excludes)}`).statusCode(400);
+      throw new MohismError(`Validation Error: ${data.name} should NOT be one of ${JSON.stringify(data.excludes)}`).statusCode(HTTP_STATUS.BadRequest);
     }
 
     if (data.contains !== undefined && !(value as string).includes(data.contains)) {
-      throw new MohismError(`Validation Error: ${data.name} must contains "${data.contains}"`).statusCode(400);
+      throw new MohismError(`Validation Error: ${data.name} must contains "${data.contains}"`).statusCode(HTTP_STATUS.BadRequest);
     }
     result[key] = value;
   });

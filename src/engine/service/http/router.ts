@@ -4,6 +4,7 @@ import { Dict } from '@mohism/utils';
 import MohismError from '../../../utils/mohism-error';
 import { IHandler } from '../common/IHandler';
 import { green, yellow, cyan, red } from 'colors';
+import { HTTP_STATUS } from './statusCode';
 
 /**
  * tree base route
@@ -82,7 +83,7 @@ export class Router {
 
     const result: IHandler | undefined = fetchRecurse(steps, tree);
     if (result === undefined) {
-      throw new MohismError('not found').statusCode(404);
+      throw new MohismError('not found').statusCode(HTTP_STATUS.NotFound);
     }
     return result;
   }
