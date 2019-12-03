@@ -11,14 +11,14 @@ export enum HTTP_PARAM_LOCATION {
   BODY = 1,
   QUERY,
   HEADERS,
-  PATH,
-}
-
-// 参数字段类型
-export enum EL_TYPE {
-  NUMBER = 1,
-  STRING,
-  BOOLEAN,
+  PARAM,
 }
 
 export type NextFn = () => Promise<any>;
+
+export type HttpConf = {
+  host?: string;
+  port?: number;
+  cors?: boolean;
+  verbose?: boolean;
+}

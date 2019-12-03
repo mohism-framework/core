@@ -1,6 +1,7 @@
-import { IDefinition } from "./iDefinition";
 import { Dict } from '@mohism/utils';
-import LocationPick from './location_pick';
+
+import { IDefinition } from '../../common/param-definition/IDefinition';
+import LocationPick from './locationPick';
 
 export default class NamePick implements IDefinition {
   data: Dict<any>;

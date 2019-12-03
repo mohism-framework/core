@@ -1,4 +1,4 @@
-import {IDefinition} from './iDefinition';
+import {IDefinition} from './IDefinition';
 import { Dict } from '@mohism/utils';
 import StringDefinition from './string.def';
 import { EL_TYPE } from '../constant';

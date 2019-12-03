@@ -1,6 +1,6 @@
 import { Dict } from '@mohism/utils';
 import CommonDefinition from './common.def';
-import { IDefinition } from './iDefinition';
+import { IDefinition } from './IDefinition';
 
 export default class StringDefinition extends CommonDefinition implements IDefinition {
   data: Dict<any>;

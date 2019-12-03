@@ -1,5 +1,5 @@
 import { Dict } from '@mohism/utils';
-import { IDefinition } from './iDefinition';
+import { IDefinition } from './IDefinition';
 import CommonDefinition from './common.def';
 
 export default class NumberDefinition extends CommonDefinition implements IDefinition {
