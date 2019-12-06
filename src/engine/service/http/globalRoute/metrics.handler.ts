@@ -29,7 +29,7 @@ class MetricsHandler implements IHttpHandler {
   async run(): Promise<any> {
     return {
       hostname: hostname(),
-      'memory(%)': Math.floor(100 * freemem() / totalmem()),
+      'memory(%)': Math.floor(100 * (totalmem() - freemem()) / totalmem()),
       loadavg: loadavg(),
     };
   }
