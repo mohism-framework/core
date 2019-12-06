@@ -35,6 +35,7 @@ export class HttpApplication implements IApplication {
   }
 
   mount(handler: IHttpHandler): void {
+    handler.app = this;
     const path: string = handler.path();
     this.router.register(handler.method(), path, handler);
     if (this.config.verbose) {
