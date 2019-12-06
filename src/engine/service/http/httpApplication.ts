@@ -14,6 +14,7 @@ import { colorfy, Router } from './router';
 import { validate } from './validate';
 import { IHandler } from '../common/IHandler';
 import { HTTP_STATUS } from './statusCode';
+import { Health, Swagger, Metrics } from './globalRoute';
 
 export class HttpApplication implements IApplication {
   private server: Server | null;
@@ -32,6 +33,9 @@ export class HttpApplication implements IApplication {
     if (this.config.verbose) {
       console.log(`${EOL}Route Tables ============${EOL}`);
     }
+    this.mount(Health);
+    this.mount(Swagger);
+    this.mount(Metrics);
   }
 
   mount(handler: IHttpHandler): void {
