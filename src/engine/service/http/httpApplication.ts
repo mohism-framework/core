@@ -98,7 +98,7 @@ export class HttpApplication implements IApplication {
               }))
             }
             if (this.config.verbose) {
-              Logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(colorfy(inc.method), 16)} ${context.path}`);
+              Logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, 8)} ${context.path}`);
             }
           });
 
@@ -114,7 +114,7 @@ export class HttpApplication implements IApplication {
             }))
           }
           if (this.config.verbose) {
-            Logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(colorfy(inc.method), 16)} ${inc.url}`);
+            Logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, 8)} ${inc.url}`);
           }
         }
       });
