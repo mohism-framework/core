@@ -3,7 +3,7 @@ import { green, grey, yellow } from 'colors';
 import { createServer, IncomingMessage, Server, ServerResponse } from 'http';
 import { EOL } from 'os';
 
-import { UnifiedResponse } from '../../../utils/global-type';
+import { UnifiedResponse, resStringify } from '../../../utils/global-type';
 import MohismError from '../../../utils/mohism-error';
 import { IApplication } from '../common/IAppliaction';
 import { HTTP_METHODS, HttpConf } from './constant';
@@ -15,6 +15,9 @@ import { validate } from './validate';
 import { IHandler } from '../common/IHandler';
 import { HTTP_STATUS } from './statusCode';
 import { Health, Swagger, Metrics } from './globalRoute';
+import { unifiedError } from '../common/error-handler';
+
+const PAD: number = 8;
 
 export class HttpApplication implements IApplication {
   private server: Server | null;
@@ -82,39 +85,23 @@ export class HttpApplication implements IApplication {
               data: v,
               message: 'ok',
             }
-            res.end(JSON.stringify(response));
+            res.end(resStringify(response));
             if (this.config.verbose) {
-              Logger.info(`[${green('200')}] ${rightpad(inc.method, 8)} ${context.path}`);
+              Logger.info(`[${green('200')}] ${rightpad(inc.method, PAD)} ${context.path}`);
             }
           }).catch(e => {
-            if (e instanceof MohismError) {
-              res.statusCode = e.status;
-              res.end(JSON.stringify(e.output()));
-            } else {
-              res.statusCode = HTTP_STATUS.InternalServerError;
-              res.end(JSON.stringify({
-                code: res.statusCode,
-                message: e.message,
-              }))
-            }
+            res.statusCode = e.status || HTTP_STATUS.InternalServerError;
+            res.end(resStringify(unifiedError(e)));
             if (this.config.verbose) {
-              Logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, 8)} ${context.path}`);
+              Logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, PAD)} ${context.path}`);
             }
           });
 
         } catch (e) {
-          if (e instanceof MohismError) {
-            res.statusCode = e.status;
-            res.end(JSON.stringify(e.output()));
-          } else {
-            res.statusCode = HTTP_STATUS.InternalServerError;
-            res.end(JSON.stringify({
-              code: res.statusCode,
-              message: e.message,
-            }))
-          }
+          res.statusCode = e.status || HTTP_STATUS.InternalServerError;
+          res.end(resStringify(unifiedError(e)));
           if (this.config.verbose) {
-            Logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, 8)} ${inc.url}`);
+            Logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, PAD)} ${inc.url}`);
           }
         }
       });
