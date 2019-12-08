@@ -12,10 +12,10 @@ const parseBody = (inc: IIncoming): Dict<any> => {
     try {
       return JSON.parse(inc.body);
     } catch {
-      throw new MohismError('bad request, invalid json').statusCode(HTTP_STATUS.UnprocessableEntity);
+      throw new MohismError('bad request, invalid json').setStatus(HTTP_STATUS.UnprocessableEntity);
     }
   }
-  throw new MohismError('bad request, only support application/json').statusCode(HTTP_STATUS.UnsupportedMediaType);
+  throw new MohismError('bad request, only support application/json').setStatus(HTTP_STATUS.UnsupportedMediaType);
 }
 
 const parseQuery = (inc: IIncoming): Dict<any> => {

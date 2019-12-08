@@ -16,7 +16,7 @@ export default class MohismError extends Error {
    * 指定http状态
    * @param status 0-999
    */
-  statusCode(status: number): this {
+  setStatus(status: number): this {
     this.status = status;
     return this;
   }
@@ -25,7 +25,7 @@ export default class MohismError extends Error {
    * 指定业务错误序号
    * @param code 0-999
    */
-  bussinessCode(code: number): this {
+  setSeq(code: number): this {
     this.seq = code;
     return this;
   }

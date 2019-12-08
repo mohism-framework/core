@@ -83,7 +83,7 @@ export class Router {
 
     const result: IHandler | undefined = fetchRecurse(steps, tree);
     if (result === undefined) {
-      throw new MohismError('not found').statusCode(HTTP_STATUS.NotFound);
+      throw new MohismError('not found').setStatus(HTTP_STATUS.NotFound);
     }
     return result;
   }

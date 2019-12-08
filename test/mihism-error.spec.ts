@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 describe('mohism-error', () => {
   it('all', () => {
-    const r: MohismError = new MohismError('test error').statusCode(251);
+    const r: MohismError = new MohismError('test error').setStatus(251);
     assert.deepEqual(r.output(), {
       code: 0,
       message: 'test error',

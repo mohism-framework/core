@@ -36,7 +36,7 @@ class SwaggerHandler implements IHttpHandler {
       swagger = readFileSync(filePath).toString();
     }
     if (swagger === '') {
-      throw new MohismError('swagger.json not found.').statusCode(404);
+      throw new MohismError('swagger.json not found.').setStatus(404);
     }
     return swagger;
   }

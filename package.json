@@ -1,11 +1,11 @@
 {
   "name": "@mohism/core",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "description": "some libs of mohism",
   "main": "./dist/index.js",
   "scripts": {
     "lint": "npx eslint src/**/*.ts --cache --fix",
-    "build": "npx tsc",
+    "build": "npx eslint src/**/*.ts --cache --fix && npx tsc",
     "test": "npx mocha --recursive -r ts-node/register test/**/*.spec.ts",
     "cover": "npx nyc npm test --skip-empty"
   },
