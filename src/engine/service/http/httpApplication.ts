@@ -3,7 +3,7 @@ import { green, grey, yellow } from 'colors';
 import { createServer, IncomingMessage, Server, ServerResponse } from 'http';
 import { EOL } from 'os';
 
-import { UnifiedResponse, resStringify } from '../../../utils/global-type';
+import { UnifiedResponse } from '../../../utils/global-type';
 import MohismError from '../../../utils/mohism-error';
 import { IApplication } from '../common/IAppliaction';
 import { HTTP_METHODS, HttpConf } from './constant';
@@ -18,6 +18,17 @@ import { Health, Swagger, Metrics } from './globalRoute';
 import { unifiedError } from '../common/error-handler';
 
 const PAD: number = 8;
+
+/**
+ * 在没有data的场合(错误之类), 或者不需要返回data的场合，优化编码速度
+ * @param res {UnifiedResponse}
+ */
+export const resStringify = (res: UnifiedResponse): string => {
+  if(!res.data){
+    return `{"code":${res.code},"message":"${res.message}","data":{}}`;
+  }
+  return JSON.stringify(res);
+};
 
 export class HttpApplication implements IApplication {
   private server: Server | null;

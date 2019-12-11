@@ -11,7 +11,7 @@
   "exclude": [
     "coverage/**",
     "node_modules/**",
-    "src/http/*",
+    "src/engine/database/mongo/*",
     "**/*.d.ts",
     "**/*.spec.ts"
   ],

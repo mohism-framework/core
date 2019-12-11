@@ -4,7 +4,7 @@ import { describe, it } from 'mocha';
 
 import { IDefinition } from '../src/engine/service/common/param-definition/IDefinition';
 import { HTTP_METHODS } from '../src/engine/service/http/constant';
-import { HttpApplication } from '../src/engine/service/http/httpApplication';
+import { HttpApplication, resStringify } from '../src/engine/service/http/httpApplication';
 import HttpTestKit from '../src/engine/service/http/httpTestKit';
 import { IHttpHandler } from '../src/engine/service/http/IHttpHandler';
 
@@ -123,5 +123,26 @@ describe('httpApp', () => {
     const t = new HttpTestKit();
     t.GET().url('/ping');
     assert.deepEqual(await t.run(app), {});
+  });
+
+  it('resStringify', () => {
+    const code = 123;
+    const message = 'test';
+    assert.equal(
+      resStringify({
+        code,
+        message,
+      }),
+      `{"code":${code},"message":"${message}","data":{}}`
+    );
+    assert.equal(resStringify({
+      code,
+      message,
+      data: [],
+    }), JSON.stringify({
+      code,
+      message,
+      data: [],
+    }));
   });
 });
