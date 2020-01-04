@@ -1,13 +1,16 @@
 import { get, has } from 'config';
 import mongoose, { ConnectionOptions, Mongoose } from 'mongoose';
 import { Logger } from '@mohism/utils';
+import { cpus } from 'os';
 
 mongoose.Promise = global.Promise;
 mongoose.pluralize(undefined);
 
-const options: ConnectionOptions = {
+const defaultOptions: ConnectionOptions = {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  poolSize: cpus().length || 10,
+  useUnifiedTopology: true,
+  family: 4,
 };
 
 let connection: Promise<Mongoose>;
@@ -24,6 +27,7 @@ const connect = async (): Promise<Mongoose> => {
     slave = [],
     replicaSet = '',
     dbname = 'test',
+    options = {},
   } = has('mongo') ? get('mongo') : {};
   let dsn: string;
   // dsn
@@ -39,7 +43,10 @@ const connect = async (): Promise<Mongoose> => {
     dsn = `mongodb://${username ? `${username}:${password}@` : ''}${host}:${port}/${dbname}`;
   }
   Logger.info(`New Connection: ${dsn}`);
-  connection = mongoose.connect(dsn, options);
+  connection = mongoose.connect(dsn, {
+    ...defaultOptions,
+    ...options,
+  });
   return connection;
 }
 

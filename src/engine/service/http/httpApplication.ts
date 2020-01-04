@@ -24,7 +24,7 @@ const PAD: number = 8;
  * @param res {UnifiedResponse}
  */
 export const resStringify = (res: UnifiedResponse): string => {
-  if(!res.data){
+  if (!res.data) {
     return `{"code":${res.code},"message":"${res.message}","data":{}}`;
   }
   return JSON.stringify(res);
@@ -78,7 +78,7 @@ export class HttpApplication implements IApplication {
         rawbody.push(chunk);
       });
       req.on('end', () => {
-        res.setHeader('content-type', 'text/json');
+        res.setHeader('content-type', 'application/json');
         const inc: IIncoming = {
           url: req.url as string,
           body: rawbody.join(''),

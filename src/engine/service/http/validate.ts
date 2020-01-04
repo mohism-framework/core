@@ -40,7 +40,7 @@ export const validate = (ctx: IContext, rules: Dict<IDefinition>): Dict<any> => 
     // range
     if (data.range !== undefined) {
       if (data.range.min) {
-        if (data.range.min.e && !(value >= data.range.min.n)) {
+        if (data.range.min.e && value < data.range.min.n) {
           throw new MohismError(`Validation Error: ${data.name} must gte ${data.range.min.n}`).setStatus(HTTP_STATUS.BadRequest);
         } else if (!(value > data.range.min.n)) {
           throw new MohismError(`Validation Error: ${data.name} must gt ${data.range.min.n}`).setStatus(HTTP_STATUS.BadRequest);
