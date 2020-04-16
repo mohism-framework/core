@@ -1,71 +1,42 @@
 import { Logger, rightpad } from '@mohism/utils';
-import { green, grey, yellow } from 'colors';
-import { createServer, IncomingMessage, Server, ServerResponse } from 'http';
-import { EOL } from 'os';
+import { blue, green, grey, yellow } from 'colors';
+import { existsSync, readdirSync, statSync } from 'fs';
+import { createServer, IncomingMessage, ServerResponse } from 'http';
+import { extname, resolve } from 'path';
 
-import { UnifiedResponse } from '../../../utils/global-type';
-import MohismError from '../../../utils/mohism-error';
-import { IApplication } from '../common/IAppliaction';
+import { unifiedError } from '../common/error-handler';
+import { IHandler } from '../common/IHandler';
+import BaseApplication from './abstractApplication';
 import { HTTP_METHODS, HttpConf } from './constant';
-import { IHttpHandler } from './IHttpHandler';
+import { Health, Metrics, Swagger } from './globalRoute';
+import { AHttpHandler, IHttpHandler, runHandler } from './httpHandler';
 import { Parser } from './paramParser';
 import { IContext, IIncoming } from './paramParser/IContext';
 import { colorfy, Router } from './router';
-import { validate } from './validate';
-import { IHandler } from '../common/IHandler';
 import { HTTP_STATUS } from './statusCode';
-import { Health, Swagger, Metrics } from './globalRoute';
-import { unifiedError } from '../common/error-handler';
+import { resStringify } from './utils';
 
 const PAD: number = 8;
 
-/**
- * 在没有data的场合(错误之类), 或者不需要返回data的场合，优化编码速度
- * @param res {UnifiedResponse}
- */
-export const resStringify = (res: UnifiedResponse): string => {
-  if (!res.data) {
-    return `{"code":${res.code},"message":"${res.message}","data":{}}`;
-  }
-  return JSON.stringify(res);
-};
+export class HttpApplication extends BaseApplication {
 
-export class HttpApplication implements IApplication {
-  private server: Server | null;
-  private config: HttpConf;
   private router: Router;
 
-  constructor(config?: HttpConf) {
-    this.config = config || {};
+  constructor(config: HttpConf, basePath: string) {
+    super(config, basePath);
     if (process.env.NODE_ENV === 'production') {
       // force 'verbose' to false, for perfermence reason
       this.config = { ...this.config, verbose: false };
     }
 
-    this.server = null;
     this.router = new Router();
-    if (this.config.verbose) {
-      console.log(`${EOL}Route Tables ============${EOL}`);
-    }
-    this.mount(Health);
-    this.mount(Swagger);
-    this.mount(Metrics);
   }
 
-  mount(handler: IHttpHandler): void {
-    handler.app = this;
-    const path: string = handler.path();
-    this.router.register(handler.method(), path, handler);
-    if (this.config.verbose) {
-      console.log(`${rightpad(colorfy(HTTP_METHODS[handler.method()]), 16)}${rightpad(handler.path(), 32)}${grey(handler.name())}`);
-    }
-  }
-
-  fetch(method: string, url: string): IHttpHandler | IHandler | undefined {
+  public fetch(method: string, url: string): IHttpHandler | IHandler | undefined {
     return this.router.fetch(method, url);
   }
 
-  listen(): void {
+  private listen(): void {
     const { port = 3000, host = '0.0.0.0', cors = true } = this.config;
     this.server = createServer((req: IncomingMessage, res: ServerResponse) => {
       if (cors) {
@@ -89,9 +60,8 @@ export class HttpApplication implements IApplication {
         try {
           const context: IContext = Parser(inc);
           const handler: IHttpHandler = this.fetch(inc.method, context.path) as IHttpHandler;
-          const params = validate(context, handler.params());
-          handler.run(params).then((v: any) => {
-            const response: UnifiedResponse = {
+          runHandler(context,handler).then((v: any) => {
+            const response = {
               code: 0,
               data: v,
               message: 'ok',
@@ -118,6 +88,43 @@ export class HttpApplication implements IApplication {
       });
     });
     this.server.listen(port, host);
-    Logger.info(`${host}:${port}`);
+    Logger.info(`Listen on ${host}:${port}`);
   }
+
+  mount(handler: IHttpHandler): void {
+    handler.app = this;
+    const path: string = handler.path();
+    this.router.register(handler.method(), path, handler);
+    console.log(`${rightpad(colorfy(HTTP_METHODS[handler.method()]), 16)}${rightpad(handler.path(), 32)}${grey(handler.name())}`);
+  }
+
+  scanHandler() {
+    const handlerPath = resolve(this.basePath, 'handlers');
+    if (existsSync(handlerPath) && statSync(handlerPath).isDirectory()) {
+      readdirSync(handlerPath).forEach((file: string) => {
+        if (!statSync(`${handlerPath}/${file}`).isDirectory()
+          && ['.ts', '.js'].includes(extname(file))) {
+          const handler = require(`${handlerPath}/${file}`.replace(extname(file), '')).default;
+          if (handler instanceof AHttpHandler) {
+            this.mount(handler);
+          }
+        }
+      });
+    }
+
+  }
+
+  async boot() {
+    // mount global route
+    this.mount(Health);
+    this.mount(Swagger);
+    this.mount(Metrics);
+    this.scanHandler();
+    this.listen();
+    if (process.env.NODE_ENV !== 'production') {
+      const { host, port } = this.config;
+      Logger.info(`See: ${blue(`http://${host}:${port}/_swagger`)}`);
+    }
+  }
+
 }

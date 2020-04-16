@@ -1,6 +1,6 @@
 import { get, has } from 'config';
 import mongoose, { ConnectionOptions, Mongoose } from 'mongoose';
-import { Logger } from '@mohism/utils';
+import { Logger, Dict, rightpad } from '@mohism/utils';
 import { cpus } from 'os';
 
 mongoose.Promise = global.Promise;
@@ -12,13 +12,9 @@ const defaultOptions: ConnectionOptions = {
   useUnifiedTopology: true,
   family: 4,
 };
+export const Pool: Dict<Mongoose> = {};
 
-let connection: Promise<Mongoose>;
-
-const connect = async (): Promise<Mongoose> => {
-  if (connection) {
-    return connection;
-  }
+const connect = async (name: string = 'default'): Promise<Mongoose> => {
   const {
     username = '',
     password = '',
@@ -28,7 +24,7 @@ const connect = async (): Promise<Mongoose> => {
     replicaSet = '',
     dbname = 'test',
     options = {},
-  } = has('mongo') ? get('mongo') : {};
+  } = has(`mongo.${name}`) ? get(`mongo.${name}`) : {};
   let dsn: string;
   // dsn
   if (slave.length) {
@@ -43,11 +39,27 @@ const connect = async (): Promise<Mongoose> => {
     dsn = `mongodb://${username ? `${username}:${password}@` : ''}${host}:${port}/${dbname}`;
   }
   Logger.info(`New Connection: ${dsn}`);
-  connection = mongoose.connect(dsn, {
+  const connection = await mongoose.connect(dsn, {
     ...defaultOptions,
     ...options,
   });
   return connection;
 }
 
-export default connect;
+export const init = async () => {
+  const mongoConf: object = has('mongo') ? get('mongo') : {};
+  const connectionNames = Object.keys(mongoConf);
+  for (let i = 0; i < connectionNames.length; i++) {
+    const name = connectionNames[i];
+    const conn = await connect(name);
+    Pool[name] = conn;
+    Logger.info(`Mongo ${rightpad(name, 16)} [${'ok'.green}]`);
+  }
+}
+
+export default async (name: string = 'default'): Promise<Mongoose> => {
+  if (!Pool[name]) {
+    Pool[name] = await connect(name);
+  }
+  return Pool[name];
+}

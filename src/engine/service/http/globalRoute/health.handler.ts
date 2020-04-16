@@ -1,10 +1,11 @@
-import { IHttpHandler } from '../IHttpHandler';
-import { IMiddleware } from '../../common/IHandler';
 import { Dict } from '@mohism/utils';
+
+import { IMiddleware } from '../../common/IHandler';
 import { IDefinition } from '../../common/param-definition/IDefinition';
 import { HTTP_METHODS } from '../constant';
+import { AHttpHandler } from '../httpHandler';
 
-class HealthHandler implements IHttpHandler {
+class HealthHandler implements AHttpHandler {
   middlewares(): Array<IMiddleware> {
     return [];
   }

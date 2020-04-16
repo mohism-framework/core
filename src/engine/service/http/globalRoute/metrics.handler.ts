@@ -1,9 +1,9 @@
-import { IHttpHandler } from '../IHttpHandler';
+import { IHttpHandler } from '../httpHandler';
 import { IMiddleware } from '../../common/IHandler';
 import { IDefinition } from '../../common/param-definition/IDefinition';
 import { Dict } from '@mohism/utils';
 import { HTTP_METHODS } from '../constant';
-import { freemem, totalmem, loadavg, hostname } from 'os';
+import { freemem, totalmem, hostname, cpus } from 'os';
 
 class MetricsHandler implements IHttpHandler {
   middlewares(): Array<IMiddleware> {
@@ -27,10 +27,16 @@ class MetricsHandler implements IHttpHandler {
   }
 
   async run(): Promise<any> {
+    const cpu = cpus().reduce((acc, cur) => {
+      const { user, sys, idle } = cur.times;
+      acc.userAndSys += user + sys;
+      acc.total += user + sys + idle;
+      return acc;
+    }, { userAndSys: 0, total: 0 });
     return {
       hostname: hostname(),
       'memory(%)': Math.floor(100 * (totalmem() - freemem()) / totalmem()),
-      loadavg: loadavg(),
+      'cpu(%)': Math.floor(10000 * (cpu.userAndSys / cpu.total)) / 100,
     };
   }
 }

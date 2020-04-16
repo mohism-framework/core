@@ -1,7 +1,7 @@
 import { Dict } from '@mohism/utils';
 
 import { HttpApplication } from './httpApplication';
-import { IHttpHandler } from './IHttpHandler';
+import { IHttpHandler } from './httpHandler';
 import { Parser } from './paramParser';
 import { IContext, IIncoming } from './paramParser/IContext';
 import { validate } from './validate';
@@ -14,7 +14,7 @@ const EmptyIncome: IIncoming = {
 };
 
 class HttpTestKit {
-  private inc: Dict<any>;
+  private inc: Dict<string|Dict<any>>;
   constructor() {
     this.inc = {};
   }

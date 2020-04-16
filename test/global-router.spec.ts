@@ -67,6 +67,6 @@ describe('global-route', () => {
     const resp = await Metrics.run()
     expect(resp).is.haveOwnProperty('hostname');
     expect(resp).is.haveOwnProperty('memory(%)');
-    expect(resp).is.haveOwnProperty('loadavg');
+    expect(resp).is.haveOwnProperty('cpu(%)');
   });
 });

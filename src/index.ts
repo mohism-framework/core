@@ -1,3 +1,7 @@
+const moduleAlias = require('module-alias');
+moduleAlias.addAliases({
+  "@core": `${__dirname}`,
+});
 
 export { MohismConf, AppMeta, UnifiedResponse } from './utils/global-type';
 export { default as MohismError } from './utils/mohism-error'
@@ -7,7 +11,7 @@ export { default as HttpTestKit } from './engine/service/http/httpTestKit';
 export { HTTP_STATUS } from './engine/service/http/statusCode';
 
 export { IMiddleware, IHandler } from './engine/service/common/IHandler';
-export { IHttpHandler } from './engine/service/http/IHttpHandler';
+export { IHttpHandler, AHttpHandler } from './engine/service/http/httpHandler';
 
 export { default as HttpPick } from './engine/service/http/paramDefinition/httpPick';
 export { default as GrpcPick } from './engine/service/grpc/paramsDefinition/grpcPick';

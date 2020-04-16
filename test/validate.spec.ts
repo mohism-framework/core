@@ -61,7 +61,7 @@ describe('validate', () => {
     try {
       validate(ctx, rules)
     } catch (e) {
-      assert.equal(e.message, 'Validation Error: email must contains "@"')
+      assert.equal(e.message, 'Validation Error: email must contains \'@\'')
     }
   });
 

@@ -4,9 +4,11 @@ import { describe, it } from 'mocha';
 
 import { IDefinition } from '../src/engine/service/common/param-definition/IDefinition';
 import { HTTP_METHODS } from '../src/engine/service/http/constant';
-import { HttpApplication, resStringify } from '../src/engine/service/http/httpApplication';
+import { HttpApplication, } from '../src/engine/service/http/httpApplication';
 import HttpTestKit from '../src/engine/service/http/httpTestKit';
-import { IHttpHandler } from '../src/engine/service/http/IHttpHandler';
+
+import { resStringify } from '../src/engine/service/http/utils';
+import { IHttpHandler } from '../src/engine/service/http/httpHandler';
 
 const fn: IHttpHandler = {
   method: () => HTTP_METHODS.GET,
@@ -109,7 +111,7 @@ describe('httpApp', () => {
   it('do-get', async () => {
     const app = new HttpApplication({
       verbose: true,
-    });
+    }, process.cwd());
     app.mount(fn);
     const t = new HttpTestKit();
     t.GET().url('/ping');
@@ -118,7 +120,7 @@ describe('httpApp', () => {
 
   it('do-get2', async () => {
     process.env.NODE_ENV = 'production';
-    const app = new HttpApplication();
+    const app = new HttpApplication({},process.cwd());
     app.mount(fn);
     const t = new HttpTestKit();
     t.GET().url('/ping');
@@ -133,7 +135,7 @@ describe('httpApp', () => {
         code,
         message,
       }),
-      `{"code":${code},"message":"${message}","data":{}}`
+      `{"code":${code},"message":"${message}"}`
     );
     assert.equal(resStringify({
       code,

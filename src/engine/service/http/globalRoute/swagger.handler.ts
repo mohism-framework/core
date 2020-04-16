@@ -1,4 +1,4 @@
-import { IHttpHandler } from "../IHttpHandler";
+import { IHttpHandler } from "../httpHandler";
 import { IMiddleware } from '../../common/IHandler';
 import { Dict } from "@mohism/utils";
 import { IDefinition } from "../../common/param-definition/IDefinition";
