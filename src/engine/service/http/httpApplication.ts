@@ -15,6 +15,10 @@ import { IContext, IIncoming } from './paramParser/IContext';
 import { colorfy, Router } from './router';
 import { HTTP_STATUS } from './statusCode';
 import { resStringify } from './utils';
+import paramDef from '../faas/ast/paramDef';
+import { transform } from '../faas/transform';
+
+const logger = Logger();
 
 const PAD: number = 8;
 
@@ -60,7 +64,7 @@ export class HttpApplication extends BaseApplication {
         try {
           const context: IContext = Parser(inc);
           const handler: IHttpHandler = this.fetch(inc.method, context.path) as IHttpHandler;
-          runHandler(context,handler).then((v: any) => {
+          runHandler(context, handler).then((v: any) => {
             const response = {
               code: 0,
               data: v,
@@ -68,13 +72,13 @@ export class HttpApplication extends BaseApplication {
             }
             res.end(resStringify(response));
             if (this.config.verbose) {
-              Logger.info(`[${green('200')}] ${rightpad(inc.method, PAD)} ${context.path}`);
+              logger.info(`[${green('200')}] ${rightpad(inc.method, PAD)} ${context.path}`);
             }
           }).catch(e => {
             res.statusCode = e.status || HTTP_STATUS.InternalServerError;
             res.end(resStringify(unifiedError(e)));
             if (this.config.verbose) {
-              Logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, PAD)} ${context.path}`);
+              logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, PAD)} ${context.path}`);
             }
           });
 
@@ -82,13 +86,13 @@ export class HttpApplication extends BaseApplication {
           res.statusCode = e.status || HTTP_STATUS.InternalServerError;
           res.end(resStringify(unifiedError(e)));
           if (this.config.verbose) {
-            Logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, PAD)} ${inc.url}`);
+            logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, PAD)} ${inc.url}`);
           }
         }
       });
     });
     this.server.listen(port, host);
-    Logger.info(`Listen on ${host}:${port}`);
+    logger.info(`Listen on ${host}:${port}`);
   }
 
   mount(handler: IHttpHandler): void {
@@ -98,32 +102,52 @@ export class HttpApplication extends BaseApplication {
     console.log(`${rightpad(colorfy(HTTP_METHODS[handler.method()]), 16)}${rightpad(handler.path(), 32)}${grey(handler.name())}`);
   }
 
-  scanHandler() {
+  async scanHandler() {
     const handlerPath = resolve(this.basePath, 'handlers');
     if (existsSync(handlerPath) && statSync(handlerPath).isDirectory()) {
       readdirSync(handlerPath).forEach((file: string) => {
         if (!statSync(`${handlerPath}/${file}`).isDirectory()
           && ['.ts', '.js'].includes(extname(file))) {
-          const handler = require(`${handlerPath}/${file}`.replace(extname(file), '')).default;
-          if (handler instanceof AHttpHandler) {
-            this.mount(handler);
+          const handler = require(`${handlerPath}/${file}`.replace(extname(file), ''));
+          if (handler.default instanceof AHttpHandler) {
+            this.mount(handler.default);
+          } else if (typeof handler.default === 'function') {
+            const defs = paramDef(`${handlerPath}/${file}`);
+            const autoParams = transform(defs);
+            this.mount({
+              path: () => (handler.path || `/${file.split('.')[0]}`),
+              params: () => ({
+                ...autoParams,
+                ...handler.params,
+              }),
+              middlewares: () => (handler.middlewares || []),
+              name: () => (handler.name || file),
+              method: () => (handler.method || HTTP_METHODS.GET),
+              run: async (params) => {
+                return handler.default(...defs.map(def => params[def.name]));
+              },
+            });
           }
         }
       });
     }
-
   }
+
+  
 
   async boot() {
     // mount global route
     this.mount(Health);
     this.mount(Swagger);
     this.mount(Metrics);
-    this.scanHandler();
+
+    // mount customer handler
+    await this.scanHandler();
+    
     this.listen();
     if (process.env.NODE_ENV !== 'production') {
       const { host, port } = this.config;
-      Logger.info(`See: ${blue(`http://${host}:${port}/_swagger`)}`);
+      logger.info(`See: ${blue(`http://${host}:${port}/_swagger`)}`);
     }
   }
 

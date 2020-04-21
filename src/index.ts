@@ -1,8 +1,4 @@
-const moduleAlias = require('module-alias');
-moduleAlias.addAliases({
-  "@core": `${__dirname}`,
-});
-
+import { useModel } from './engine/service/hooks/index';
 export { MohismConf, AppMeta, UnifiedResponse } from './utils/global-type';
 export { default as MohismError } from './utils/mohism-error'
 
@@ -19,3 +15,8 @@ export { IDefinition } from './engine/service/common/param-definition/IDefinitio
 
 export { EL_TYPE } from './engine/service/common/constant';
 export { NextFn, HTTP_METHODS, HTTP_PARAM_LOCATION, HttpConf } from './engine/service/http/constant';
+
+
+export { default as Model } from './engine/database/mongo/modelFactory';
+
+export { useModel, useDB } from './engine/service/hooks';

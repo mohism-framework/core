@@ -1,4 +1,5 @@
-import { UnifiedResponse } from '@core/utils/global-type';
+import { UnifiedResponse } from '../../../utils/global-type';
+
 /**
  * TODO 有人能找到更好的序列化方式吗？
  * @param res {UnifiedResponse}

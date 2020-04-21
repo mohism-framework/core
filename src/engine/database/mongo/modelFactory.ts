@@ -1,5 +1,6 @@
-import { Schema, Mongoose, Document, Model as MongooseModel } from 'mongoose';
-import { Dict } from '@mohism/utils';
+import { Dict, Maker } from '@mohism/utils';
+import { IMaker } from '@mohism/utils/dist/libs/lazy';
+import { Document, Model as MongooseModel, Mongoose, Schema } from 'mongoose';
 
 import get from './connect';
 
@@ -7,10 +8,14 @@ interface IModelOption {
   connection: string;
 }
 
-const Model = async (name: string, obj: Dict<any>, options: IModelOption = { connection: 'default' }): Promise<MongooseModel<Document>> => {
-  const schema: Schema = new Schema(obj);
-  const conn: Mongoose = await get(options.connection);
-  return conn.model(name, schema);
-}
+const Model = (name: string, obj: Dict<any>, options: IModelOption = { connection: 'default' }): IMaker<MongooseModel<Document>> => {
+  return Maker(async () => {
+    const schema: Schema = new Schema(obj, {
+      versionKey: false,
+    });
+    const conn: Mongoose = await get(options.connection);
+    return conn.model(name, schema);
+  });
+};
 
 export default Model;

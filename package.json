@@ -28,12 +28,13 @@
     "typescript": "^3.6.4"
   },
   "dependencies": {
-    "@mohism/utils": "^1.0.6",
+    "@mohism/utils": "^1.1.1",
     "@types/config": "0.0.36",
     "@types/kcors": "^2.2.3",
     "@types/koa": "^2.0.50",
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-router": "^7.0.42",
+    "@typescript-eslint/typescript-estree": "^2.28.0",
     "colors": "^1.4.0",
     "config": "^3.2.4",
     "kcors": "^2.2.2",

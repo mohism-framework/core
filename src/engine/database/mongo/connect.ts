@@ -3,6 +3,8 @@ import mongoose, { ConnectionOptions, Mongoose } from 'mongoose';
 import { Logger, Dict, rightpad } from '@mohism/utils';
 import { cpus } from 'os';
 
+const logger = Logger();
+
 mongoose.Promise = global.Promise;
 mongoose.pluralize(undefined);
 
@@ -38,7 +40,7 @@ const connect = async (name: string = 'default'): Promise<Mongoose> => {
     // single
     dsn = `mongodb://${username ? `${username}:${password}@` : ''}${host}:${port}/${dbname}`;
   }
-  Logger.info(`New Connection: ${dsn}`);
+  logger.info(`New Connection: ${dsn}`);
   const connection = await mongoose.connect(dsn, {
     ...defaultOptions,
     ...options,
@@ -53,7 +55,7 @@ export const init = async () => {
     const name = connectionNames[i];
     const conn = await connect(name);
     Pool[name] = conn;
-    Logger.info(`Mongo ${rightpad(name, 16)} [${'ok'.green}]`);
+    logger.info(`Mongo ${rightpad(name, 16)} [${'ok'.green}]`);
   }
 }
 
