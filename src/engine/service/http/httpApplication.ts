@@ -15,8 +15,8 @@ import { IContext, IIncoming } from './paramParser/IContext';
 import { colorfy, Router } from './router';
 import { HTTP_STATUS } from './statusCode';
 import { resStringify } from './utils';
-import paramDef from '../faas/ast/paramDef';
-import { transform } from '../faas/transform';
+import paramDef from './faas/ast/paramDef';
+import { transform } from './faas/transform';
 
 const logger = Logger();
 

@@ -10,7 +10,6 @@ export { IMiddleware, IHandler } from './engine/service/common/IHandler';
 export { IHttpHandler, AHttpHandler } from './engine/service/http/httpHandler';
 
 export { default as HttpPick } from './engine/service/http/paramDefinition/httpPick';
-export { default as GrpcPick } from './engine/service/grpc/paramsDefinition/grpcPick';
 export { IDefinition } from './engine/service/common/param-definition/IDefinition';
 
 export { EL_TYPE } from './engine/service/common/constant';

@@ -6,7 +6,7 @@ import CommonDefinition from '../src/engine/service/common/param-definition/comm
 import NumberDefinition from '../src/engine/service/common/param-definition/number.def';
 import StringDefinition from '../src/engine/service/common/param-definition/string.def';
 import TypePicker from '../src/engine/service/common/param-definition/typePick';
-import GrpcPick from '../src/engine/service/grpc/paramsDefinition/grpcPick';
+
 import { HTTP_PARAM_LOCATION } from '../src/engine/service/http/constant';
 import HttpPick from '../src/engine/service/http/paramDefinition/httpPick';
 import LocationPick from '../src/engine/service/http/paramDefinition/locationPick';
@@ -28,16 +28,6 @@ describe('paramDefinition', () => {
   });
 
   it('pick:type', () => {
-    const p = GrpcPick('foo').number();
-    assert.deepEqual(p.data, {
-      name: 'foo',
-      type: EL_TYPE.NUMBER
-    });
-    const p2 = GrpcPick('foo').string();
-    assert.deepEqual(p2.data, {
-      name: 'foo',
-      type: EL_TYPE.STRING
-    });
     const p3 = new TypePicker();
     p3.boolean();
     assert.deepEqual(p3.data, {

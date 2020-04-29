@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
 
-import parse from '../src/engine/service/faas/ast/paramDef';
-import { transform } from '../src/engine/service/faas/transform';
+import parse from '../src/engine/service/http/faas/ast/paramDef';
+import { transform } from '../src/engine/service/http/faas/transform';
 import { HTTP_METHODS, HTTP_PARAM_LOCATION } from '../src/engine/service/http/constant';
 
 
