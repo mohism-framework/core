@@ -1,6 +1,6 @@
 import { Logger, rightpad } from '@mohism/utils';
 import { blue, green, grey, yellow } from 'colors';
-import { existsSync, readdirSync, statSync } from 'fs';
+import { existsSync, readdirSync, statSync, readFileSync } from 'fs';
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 import { extname, resolve } from 'path';
 
@@ -75,7 +75,7 @@ export class HttpApplication extends BaseApplication {
               logger.info(`[${green('200')}] ${rightpad(inc.method, PAD)} ${context.path}`);
             }
           }).catch(e => {
-            res.statusCode = e.status || HTTP_STATUS.InternalServerError;
+            res.statusCode = this.getStatus(e);
             res.end(resStringify(unifiedError(e)));
             if (this.config.verbose) {
               logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, PAD)} ${context.path}`);
@@ -83,7 +83,7 @@ export class HttpApplication extends BaseApplication {
           });
 
         } catch (e) {
-          res.statusCode = e.status || HTTP_STATUS.InternalServerError;
+          res.statusCode = this.getStatus(e);
           res.end(resStringify(unifiedError(e)));
           if (this.config.verbose) {
             logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, PAD)} ${inc.url}`);
@@ -112,7 +112,8 @@ export class HttpApplication extends BaseApplication {
           if (handler.default instanceof AHttpHandler) {
             this.mount(handler.default);
           } else if (typeof handler.default === 'function') {
-            const defs = paramDef(`${handlerPath}/${file}`);
+            const codes = readFileSync(`${handlerPath}/${file}`).toString();
+            const defs = paramDef(codes);
             const autoParams = transform(defs);
             this.mount({
               path: () => (handler.path || `/${file.split('.')[0]}`),
@@ -133,8 +134,6 @@ export class HttpApplication extends BaseApplication {
     }
   }
 
-  
-
   async boot() {
     // mount global route
     this.mount(Health);
@@ -143,7 +142,7 @@ export class HttpApplication extends BaseApplication {
 
     // mount customer handler
     await this.scanHandler();
-    
+
     this.listen();
     if (process.env.NODE_ENV !== 'production') {
       const { host, port } = this.config;
@@ -151,4 +150,10 @@ export class HttpApplication extends BaseApplication {
     }
   }
 
+  private getStatus(e: { status?: HTTP_STATUS }): HTTP_STATUS {
+    if (this.config.strictHttpStatus === false) {
+      return HTTP_STATUS.OK;
+    }
+    return e.status || HTTP_STATUS.InternalServerError;
+  }
 }

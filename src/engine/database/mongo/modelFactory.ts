@@ -12,6 +12,7 @@ const Model = (name: string, obj: Dict<any>, options: IModelOption = { connectio
   return Maker(async () => {
     const schema: Schema = new Schema(obj, {
       versionKey: false,
+      timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
     });
     const conn: Mongoose = await get(options.connection);
     return conn.model(name, schema);

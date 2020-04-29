@@ -64,8 +64,7 @@ function pickParamName(param: Parameter): IParamDef {
   }
 }
 
-export default (filepath: string): Array<IParamDef> => {
-  const code = readFileSync(`${filepath}`).toString();
+export default (code: string): Array<IParamDef> => {
   const ast = parse(code);
   const result: Array<IParamDef> = [];
 

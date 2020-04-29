@@ -17,8 +17,8 @@ export default abstract class BaseApplication implements IApplication {
   protected server: Server | null;
   protected config: HttpConf;
   protected basePath: string;
-  protected _db: Getter<Dict<Mongoose>, Mongoose> | null;
-  protected _models: Getter<Dict<Model<Document>>, Model<Document>> | null;
+  protected _db: Getter<Mongoose> | null;
+  protected _models: Getter<Model<Document>> | null;
   protected hooks: Record<THooks, Function[]>;
 
   constructor(config: HttpConf, basePath: string) {
@@ -53,7 +53,7 @@ export default abstract class BaseApplication implements IApplication {
   async abstract boot(): Promise<void>;
 
   private async scanModel() {
-    this._db = new Getter<Dict<Mongoose>, Mongoose>(Pool);
+    this._db = new Getter<Mongoose>(Pool);
     const modelPath = resolve(this.basePath, 'models');
     if (existsSync(modelPath) && statSync(modelPath).isDirectory()) {
       const allModels: Dict<Model<Document>> = {};
@@ -61,10 +61,12 @@ export default abstract class BaseApplication implements IApplication {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const id: string = file.split('.')[0];
+        if (!['.js', 'ts'].includes(extname(file))) {
+          continue;
+        }
         const mod = require(`${modelPath}/${file}`.replace(extname(file), '')).default;
         allModels[id] = await mod();
       }
-
       this._models = new Getter(allModels);
     }
   }

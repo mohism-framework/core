@@ -1,13 +1,13 @@
 {
   "name": "@mohism/core",
-  "version": "0.4.1",
+  "version": "0.4.3",
   "description": "some libs of mohism",
   "main": "./dist/index.js",
   "scripts": {
     "lint": "npx eslint src/**/*.ts --cache --fix",
     "build": "npx eslint src/**/*.ts --cache --fix && npx tsc",
-    "test": "npx mocha --recursive -r ts-node/register test/**/*.spec.ts",
-    "cover": "npx nyc npm test --skip-empty"
+    "test": "SUPPRESS_NO_CONFIG_WARNING=true npx mocha --recursive -r ts-node/register test/**/*.spec.ts",
+    "cover": "SUPPRESS_NO_CONFIG_WARNING=true npx nyc npm test --skip-empty"
   },
   "author": "lanhao",
   "license": "ISC",
@@ -28,7 +28,8 @@
     "typescript": "^3.6.4"
   },
   "dependencies": {
-    "@mohism/utils": "^1.1.1",
+    "@mohism/simon": "^1.0.5",
+    "@mohism/utils": "^1.1.3",
     "@types/config": "0.0.36",
     "@types/kcors": "^2.2.3",
     "@types/koa": "^2.0.50",

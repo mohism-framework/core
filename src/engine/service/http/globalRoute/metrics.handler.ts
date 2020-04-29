@@ -1,9 +1,11 @@
-import { IHttpHandler } from '../httpHandler';
+import Simon from '@mohism/simon';
+import { Dict } from '@mohism/utils';
+import { hostname } from 'os';
+
 import { IMiddleware } from '../../common/IHandler';
 import { IDefinition } from '../../common/param-definition/IDefinition';
-import { Dict } from '@mohism/utils';
 import { HTTP_METHODS } from '../constant';
-import { freemem, totalmem, hostname, cpus } from 'os';
+import { IHttpHandler } from '../httpHandler';
 
 class MetricsHandler implements IHttpHandler {
   middlewares(): Array<IMiddleware> {
@@ -27,16 +29,13 @@ class MetricsHandler implements IHttpHandler {
   }
 
   async run(): Promise<any> {
-    const cpu = cpus().reduce((acc, cur) => {
-      const { user, sys, idle } = cur.times;
-      acc.userAndSys += user + sys;
-      acc.total += user + sys + idle;
-      return acc;
-    }, { userAndSys: 0, total: 0 });
+    const { total: mTotal, used: mUsed } = Simon.memory();
+    const { total: dTotal, used: dUsed } = Simon.diskUsed('/');
     return {
       hostname: hostname(),
-      'memory(%)': Math.floor(100 * (totalmem() - freemem()) / totalmem()),
-      'cpu(%)': Math.floor(10000 * (cpu.userAndSys / cpu.total)) / 100,
+      'disk(%)': Math.floor(10000 * dUsed / dTotal) / 100,
+      'memory(%)': Math.floor(10000 * mUsed / mTotal) / 100,
+      'cpu(%)': Simon.cpu(),
     };
   }
 }

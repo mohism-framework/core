@@ -21,4 +21,5 @@ export type HttpConf = {
   port?: number;
   cors?: boolean;
   verbose?: boolean;
+  strictHttpStatus?: boolean;
 }

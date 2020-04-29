@@ -2,9 +2,10 @@ import { Document, Model, Mongoose } from 'mongoose';
 
 import BaseApplication from '../http/abstractApplication';
 
+import { Dict } from '@mohism/utils';
+import MohismError from '../../../utils/mohism-error';
+
 let application: BaseApplication | null = null;
-
-
 
 export const bindHooks = async (app: BaseApplication) => {
   application = app;

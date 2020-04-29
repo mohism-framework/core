@@ -8,3 +8,4 @@ export const resStringify = (res: UnifiedResponse): string => {
   // return JSON.stringify(res);
   return `{"code":${res.code},"message":"${res.message}"${res.data !== undefined ? `,"data":${JSON.stringify(res.data)}` : ''}}`;
 };
+

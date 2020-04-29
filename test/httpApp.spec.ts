@@ -9,6 +9,7 @@ import HttpTestKit from '../src/engine/service/http/httpTestKit';
 
 import { resStringify } from '../src/engine/service/http/utils';
 import { IHttpHandler } from '../src/engine/service/http/httpHandler';
+import { useModel, useDB } from '../src/engine/service/hooks/index';
 
 const fn: IHttpHandler = {
   method: () => HTTP_METHODS.GET,
@@ -120,7 +121,7 @@ describe('httpApp', () => {
 
   it('do-get2', async () => {
     process.env.NODE_ENV = 'production';
-    const app = new HttpApplication({},process.cwd());
+    const app = new HttpApplication({}, process.cwd());
     app.mount(fn);
     const t = new HttpTestKit();
     t.GET().url('/ping');
@@ -146,5 +147,12 @@ describe('httpApp', () => {
       message,
       data: [],
     }));
+  });
+
+  it('hooks-useModel', () => {
+    assert.equal(useModel(''), undefined);
+  });
+  it('hooks-useDB', () => {
+    assert.equal(useDB(''), undefined);
   });
 });
