@@ -40,6 +40,8 @@ export class HttpApplication extends BaseApplication {
     return this.router.fetch(method, url);
   }
 
+  // node http 的基础实现，我没法测
+  /* istanbul ignore next */
   private listen(): void {
     const { port = 3000, host = '0.0.0.0', cors = true } = this.config;
     this.server = createServer((req: IncomingMessage, res: ServerResponse) => {
@@ -52,6 +54,7 @@ export class HttpApplication extends BaseApplication {
       req.on('data', (chunk: any) => {
         rawbody.push(chunk);
       });
+
       req.on('end', () => {
         res.setHeader('content-type', 'application/json');
         const inc: IIncoming = {
@@ -102,6 +105,10 @@ export class HttpApplication extends BaseApplication {
     console.log(`${rightpad(colorfy(HTTP_METHODS[handler.method()]), 16)}${rightpad(handler.path(), 32)}${grey(handler.name())}`);
   }
 
+  /**
+   * 这个要看具体项目内运行，测试条件困难，暂时没法测
+   */
+  /* istanbul ignore next */
   async scanHandler() {
     const handlerPath = resolve(this.basePath, 'handlers');
     if (existsSync(handlerPath) && statSync(handlerPath).isDirectory()) {
@@ -134,6 +141,10 @@ export class HttpApplication extends BaseApplication {
     }
   }
 
+  /**
+   * 因为boot部分，涉及到运行时监听端口，打印console之类，不太好测试，也没必要测试。
+   */
+  /* istanbul ignore next */
   async boot() {
     // mount global route
     this.mount(Health);
@@ -150,7 +161,7 @@ export class HttpApplication extends BaseApplication {
     }
   }
 
-  private getStatus(e: { status?: HTTP_STATUS }): HTTP_STATUS {
+  public getStatus(e: { status?: HTTP_STATUS }): HTTP_STATUS {
     if (this.config.strictHttpStatus === false) {
       return HTTP_STATUS.OK;
     }

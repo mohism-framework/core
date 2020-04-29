@@ -1,6 +1,7 @@
+import { assert } from 'chai';
+
 import { Parser } from '../src/engine/service/http/paramParser';
 import { IIncoming } from '../src/engine/service/http/paramParser/IContext';
-import { expect, assert } from 'chai';
 
 
 describe('paramParse', () => {

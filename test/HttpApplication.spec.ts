@@ -10,6 +10,7 @@ import HttpTestKit from '../src/engine/service/http/httpTestKit';
 import { resStringify } from '../src/engine/service/http/utils';
 import { IHttpHandler } from '../src/engine/service/http/httpHandler';
 import { useModel, useDB } from '../src/engine/service/hooks/index';
+import MohismError from '../src/utils/mohism-error';
 
 const fn: IHttpHandler = {
   method: () => HTTP_METHODS.GET,
@@ -152,7 +153,19 @@ describe('httpApp', () => {
   it('hooks-useModel', () => {
     assert.equal(useModel(''), undefined);
   });
+
   it('hooks-useDB', () => {
     assert.equal(useDB(''), undefined);
   });
+
+  it('get-status', () => {
+    const testErr = new MohismError('test').setStatus(999);
+    const app = new HttpApplication({}, process.cwd());
+    assert.equal(app.getStatus(testErr), 999);
+    const app2 = new HttpApplication({ strictHttpStatus: false }, process.cwd());
+    assert.equal(app2.getStatus(testErr), 200);
+
+    assert.equal(app.getStatus(new Error() as MohismError), 500);
+  });
+
 });

@@ -67,7 +67,6 @@ function pickParamName(param: Parameter): IParamDef {
 export default (code: string): Array<IParamDef> => {
   const ast = parse(code);
   const result: Array<IParamDef> = [];
-
   ast.body.forEach((stmt: Statement) => {
     switch (stmt.type) {
       case 'ExportDefaultDeclaration':
@@ -78,8 +77,6 @@ export default (code: string): Array<IParamDef> => {
             result.push(def);
           });
         }
-        break;
-      default:
         break;
     }
   });

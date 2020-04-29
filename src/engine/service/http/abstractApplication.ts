@@ -19,7 +19,6 @@ export default abstract class BaseApplication implements IApplication {
   protected basePath: string;
   protected _db: Getter<Mongoose> | null;
   protected _models: Getter<Model<Document>> | null;
-  protected hooks: Record<THooks, Function[]>;
 
   constructor(config: HttpConf, basePath: string) {
     this.basePath = basePath;
@@ -27,16 +26,8 @@ export default abstract class BaseApplication implements IApplication {
     this.server = null;
     this._db = null;
     this._models = null;
-    this.hooks = {
-      onReady: [],
-      onError: [],
-    } as Record<THooks, Function[]>;
     // this is important!
     bindHooks(this);
-  }
-
-  public onReady(fn: Function) {
-    this.hooks.onReady.push(fn);
   }
 
   get db() {
@@ -52,6 +43,7 @@ export default abstract class BaseApplication implements IApplication {
    */
   async abstract boot(): Promise<void>;
 
+  /* istanbul ignore next */
   private async scanModel() {
     this._db = new Getter<Mongoose>(Pool);
     const modelPath = resolve(this.basePath, 'models');
@@ -71,19 +63,15 @@ export default abstract class BaseApplication implements IApplication {
     }
   }
 
+  /* istanbul ignore next */
   public async bootstrap() {
     try {
       // init db
       await init();
       await this.scanModel();
-
       await this.boot();
     } catch (e) {
       logger.err(e.message);
-    } finally {
-      this.hooks.onReady.forEach((fn: Function) => {
-        fn();
-      });
     }
   }
 } 
