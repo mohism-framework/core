@@ -10,10 +10,14 @@ import { HTTP_STATUS } from './statusCode';
  * tree base route
  */
 
-export type Layer = {
+export interface Layer {
   name: string;
   handler?: IHandler;
   next: Dict<Layer>;
+}
+
+export interface IRouteOptions {
+  prefix?: string;
 }
 
 /**
@@ -47,8 +51,11 @@ const fetchRecurse = (steps: Array<string>, layerDict: Dict<Layer>): IHandler | 
 
 export class Router {
   private tree: Dict<Layer>;
-  constructor() {
+  private options: IRouteOptions;
+
+  constructor(options: IRouteOptions = {}) {
     this.tree = {};
+    this.options = options;
   }
 
   /**
@@ -58,7 +65,8 @@ export class Router {
    * @param handler {IHandler}
    */
   register(method: HTTP_METHODS, url: string, handler: IHandler) {
-    const steps: Array<string> = [HTTP_METHODS[method], ...(url.split('/'))];
+    const prefix = this.options.prefix;
+    const steps: Array<string> = [HTTP_METHODS[method], ...(prefix ? [prefix] : []), ...(url.split('/'))];
     let tree: Dict<Layer> = this.tree;
     steps.forEach((step: string, index: number) => {
       if (step === '') {

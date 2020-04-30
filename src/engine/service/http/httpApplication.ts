@@ -33,7 +33,9 @@ export class HttpApplication extends BaseApplication {
       this.config = { ...this.config, verbose: false };
     }
 
-    this.router = new Router();
+    this.router = new Router({
+      prefix: config.prefix,
+    });
   }
 
   public fetch(method: string, url: string): IHttpHandler | IHandler | undefined {
@@ -102,7 +104,8 @@ export class HttpApplication extends BaseApplication {
     handler.app = this;
     const path: string = handler.path();
     this.router.register(handler.method(), path, handler);
-    console.log(`${rightpad(colorfy(HTTP_METHODS[handler.method()]), 16)}${rightpad(handler.path(), 32)}${grey(handler.name())}`);
+    const prefix = this.config.prefix;
+    console.log(`${rightpad(colorfy(HTTP_METHODS[handler.method()]), 16)}${rightpad(`${prefix ? `/${prefix}` : ''}${handler.path()}`, 32)}${grey(handler.name())}`);
   }
 
   /**
