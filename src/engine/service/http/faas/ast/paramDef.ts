@@ -1,4 +1,3 @@
-import { Dict } from '@mohism/utils/dist/libs/type';
 import { parse } from '@typescript-eslint/typescript-estree';
 import {
   AssignmentPattern,
@@ -9,7 +8,7 @@ import {
   TSTypeParameterInstantiation,
   TypeNode,
 } from '@typescript-eslint/typescript-estree/dist/ts-estree/ts-estree';
-import { readFileSync } from 'fs';
+
 import { IParamDef, SimpleKey } from './types';
 
 export const TsSimpleTypeMap = {
@@ -65,7 +64,12 @@ function pickParamName(param: Parameter): IParamDef {
 }
 
 export default (code: string): Array<IParamDef> => {
-  const ast = parse(code);
+  const ast = parse(code, {
+    comment: true,
+    loc: false,
+    range: false,
+  });
+
   const result: Array<IParamDef> = [];
   ast.body.forEach((stmt: Statement) => {
     switch (stmt.type) {

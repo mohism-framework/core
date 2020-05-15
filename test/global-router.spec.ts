@@ -26,10 +26,10 @@ describe('global-route', () => {
     } catch (e) {
       assert.equal(e.message, 'swagger.json not found.');
     }
-
+    const realCwd = process.cwd();
     process.chdir(`${process.cwd()}/test`);
-
-    assert.deepEqual(await Swagger.run(), '{"for":"test"}')
+    assert.deepEqual(await Swagger.run(), '{"for":"test"}');
+    process.chdir(realCwd);
   });
 
   it('health', async () => {

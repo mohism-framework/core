@@ -1,22 +1,19 @@
 import { Logger, rightpad } from '@mohism/utils';
 import { blue, green, grey, yellow } from 'colors';
-import { existsSync, readdirSync, statSync, readFileSync } from 'fs';
 import { createServer, IncomingMessage, ServerResponse } from 'http';
-import { extname, resolve } from 'path';
 
 import { unifiedError } from '../common/error-handler';
 import { IHandler } from '../common/IHandler';
 import BaseApplication from './abstractApplication';
 import { HTTP_METHODS, HttpConf } from './constant';
+import scanHandler from './faas/scanHandler';
 import { Health, Metrics, Swagger } from './globalRoute';
-import { AHttpHandler, IHttpHandler, runHandler } from './httpHandler';
+import { IHttpHandler, runHandler } from './httpHandler';
 import { Parser } from './paramParser';
 import { IContext, IIncoming } from './paramParser/IContext';
 import { colorfy, Router } from './router';
 import { HTTP_STATUS } from './statusCode';
 import { resStringify } from './utils';
-import paramDef from './faas/ast/paramDef';
-import { transform } from './faas/transform';
 
 const logger = Logger();
 
@@ -113,35 +110,10 @@ export class HttpApplication extends BaseApplication {
    */
   /* istanbul ignore next */
   async scanHandler() {
-    const handlerPath = resolve(this.basePath, 'handlers');
-    if (existsSync(handlerPath) && statSync(handlerPath).isDirectory()) {
-      readdirSync(handlerPath).forEach((file: string) => {
-        if (!statSync(`${handlerPath}/${file}`).isDirectory()
-          && ['.ts', '.js'].includes(extname(file))) {
-          const handler = require(`${handlerPath}/${file}`.replace(extname(file), ''));
-          if (handler.default instanceof AHttpHandler) {
-            this.mount(handler.default);
-          } else if (typeof handler.default === 'function') {
-            const codes = readFileSync(`${handlerPath}/${file}`).toString();
-            const defs = paramDef(codes);
-            const autoParams = transform(defs);
-            this.mount({
-              path: () => (handler.path || `/${file.split('.')[0]}`),
-              params: () => ({
-                ...autoParams,
-                ...handler.params,
-              }),
-              middlewares: () => (handler.middlewares || []),
-              name: () => (handler.name || file),
-              method: () => (handler.method || HTTP_METHODS.GET),
-              run: async (params) => {
-                return handler.default(...defs.map(def => params[def.name]));
-              },
-            });
-          }
-        }
-      });
-    }
+    const handlers = scanHandler(this.basePath);
+    handlers.forEach((handler: IHttpHandler) => {
+      this.mount(handler);
+    });
   }
 
   /**

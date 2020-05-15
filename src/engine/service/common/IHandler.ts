@@ -1,8 +1,6 @@
 import { Dict } from '@mohism/utils';
 import { IDefinition } from './param-definition/IDefinition';
 
-
-
 export interface IMiddleware {
   name(): string;
   /**

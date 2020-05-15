@@ -1,5 +1,5 @@
 import { Dict, Getter, Logger } from '@mohism/utils';
-import { existsSync, readdirSync, statSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readdirSync, statSync } from 'fs';
 import { Server } from 'http';
 import { Document, Model, Mongoose } from 'mongoose';
 import { extname, resolve } from 'path';
@@ -47,13 +47,14 @@ export default abstract class BaseApplication implements IApplication {
   private async scanModel() {
     this._db = new Getter<Mongoose>(Pool);
     const modelPath = resolve(this.basePath, 'models');
+    
     if (existsSync(modelPath) && statSync(modelPath).isDirectory()) {
       const allModels: Dict<Model<Document>> = {};
       const files = readdirSync(modelPath);
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const id: string = file.split('.')[0];
-        if (!['.js', 'ts'].includes(extname(file))) {
+        if (!['.js', '.ts'].includes(extname(file))) {
           continue;
         }
         const mod = require(`${modelPath}/${file}`.replace(extname(file), '')).default;
