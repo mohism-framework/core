@@ -7,6 +7,10 @@ export interface IMiddleware {
    */
   name(): string;
   /**
+   * 描述
+   */
+  description?: () => string;
+  /**
      * 入参定义
      */
   params(): Dict<IDefinition>;

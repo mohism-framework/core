@@ -22,7 +22,7 @@ export default (srcPath: string, withComment = false): Array<IHttpHandler> => {
           result.push(handler.default);
         } else if (typeof handler.default === 'function') {
           const codes = readFileSync(`${handlerPath}/${file}`).toString();
-          const defs = paramDef(codes);
+          const [defs, comment] = paramDef(codes);
           const autoParams = transform(defs);
           if (handler.params) {
             for (let field in handler.params) {
@@ -31,7 +31,7 @@ export default (srcPath: string, withComment = false): Array<IHttpHandler> => {
               }
               // comment
               if (withComment) {
-                
+
               }
               autoParams[field] = {
                 ...autoParams[field],
@@ -40,6 +40,7 @@ export default (srcPath: string, withComment = false): Array<IHttpHandler> => {
             }
           }
           result.push({
+            description: () => comment.comment,
             path: () => (handler.path || `/${file.split('.')[0]}`),
             params: () => autoParams,
             middlewares: () => (handler.middlewares || []),

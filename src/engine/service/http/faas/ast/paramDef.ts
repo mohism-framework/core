@@ -119,13 +119,18 @@ function nearbyComment(comments: Array<IComment>, stmt: Statement): IComment {
   };
 }
 
-export default (code: string): Array<IParamDef> => {
+export default (code: string): [Array<IParamDef>, IComment] => {
   const ast = parse(code, {
     comment: true,
     loc: true,
     range: false,
   });
   const comments: Array<IComment> = [];
+  let specComment: IComment = {
+    comment: '',
+    start: 0,
+    end: 0,
+  };
   ast.comments.forEach(c => {
     if (c.type === 'Block') {
       comments.push({
@@ -145,7 +150,7 @@ export default (code: string): Array<IParamDef> => {
   ast.body.forEach((stmt: Statement) => {
     switch (stmt.type) {
       case 'ExportDefaultDeclaration':
-        const specComment: IComment = nearbyComment(comments, stmt);
+        specComment = nearbyComment(comments, stmt);
 
         // 直接export function
         if (stmt.declaration.type === 'ArrowFunctionExpression') {
@@ -167,5 +172,5 @@ export default (code: string): Array<IParamDef> => {
     }
   });
 
-  return result;
+  return [result, specComment];
 };
