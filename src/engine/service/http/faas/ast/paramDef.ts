@@ -9,7 +9,8 @@ import {
   TypeNode,
 } from '@typescript-eslint/typescript-estree/dist/ts-estree/ts-estree';
 
-import { IParamDef, SimpleKey } from './types';
+import { IParamDef, SimpleKey, IComment } from './types';
+import { Dict } from '@mohism/utils';
 
 export const TsSimpleTypeMap = {
   TSAnyKeyword: 'any',
@@ -43,7 +44,7 @@ function getTypeName(tnode: TypeNode): string {
   }
 }
 
-function pickParamName(param: Parameter): IParamDef {
+function pickParamName(param: Parameter, comment: IComment): IParamDef {
   const { name, typeAnnotation } =
     param.type === 'Identifier'
       ? param
@@ -53,34 +54,115 @@ function pickParamName(param: Parameter): IParamDef {
     const typeName = getTypeName(tAnnotation);
 
     if (param.type === 'AssignmentPattern' && param.right?.type === 'Literal') {
-      return { name, typeName, defaultValue: param.right.value };
+      return {
+        name,
+        typeName,
+        defaultValue: param.right.value,
+        comment: comment.params ? comment.params[name] : '',
+      };
     }
-    return { name, typeName };
+    return {
+      name,
+      typeName,
+      comment: comment.params ? comment.params[name] : '',
+    };
   } else {
     const defaultValue = ((param as AssignmentPattern).right as Literal).value;
     const typeName = typeof defaultValue;
-    return { name, typeName, defaultValue };
+    return {
+      name,
+      typeName,
+      defaultValue,
+      comment: comment.params ? comment.params[name] : '',
+    };
   }
+}
+
+function formatComment(blockComment: string): {
+  comment: string;
+  params?: Dict<string>;
+} {
+  const result: {
+    comment: string;
+    params: Dict<string>;
+  } = {
+    comment: '',
+    params: {},
+  };
+  const lines = blockComment.replace(/\*/g, '').split(/\n/i);
+  lines.forEach((line: string) => {
+    const plain = line.trim();
+    if (!plain) {
+      return;
+    }
+    if (plain.startsWith('@param')) {
+      const [_, field, ...rest] = plain.split(' ');
+      result.params[field] = rest.join(' ');
+    } else {
+      result.comment += plain;
+    }
+  });
+
+  return result;
+}
+
+function nearbyComment(comments: Array<IComment>, stmt: Statement): IComment {
+  for (let i = comments.length - 1; i >= 0; i--) {
+    if (comments[i].end < stmt.loc.start.line) {
+      return comments[i];
+    }
+  }
+  return {
+    comment: '',
+    start: 0,
+    end: 0,
+  };
 }
 
 export default (code: string): Array<IParamDef> => {
   const ast = parse(code, {
     comment: true,
-    loc: false,
+    loc: true,
     range: false,
   });
-
+  const comments: Array<IComment> = [];
+  ast.comments.forEach(c => {
+    if (c.type === 'Block') {
+      comments.push({
+        ...formatComment(c.value),
+        start: c.loc.start.line,
+        end: c.loc.end.line,
+      });
+    } else {
+      comments.push({
+        comment: c.value.trim(),
+        start: c.loc.start.line,
+        end: c.loc.end.line,
+      });
+    }
+  });
   const result: Array<IParamDef> = [];
   ast.body.forEach((stmt: Statement) => {
     switch (stmt.type) {
       case 'ExportDefaultDeclaration':
+        const specComment: IComment = nearbyComment(comments, stmt);
+
+        // 直接export function
         if (stmt.declaration.type === 'ArrowFunctionExpression') {
           const { params } = stmt.declaration;
           params.forEach((param: Parameter) => {
-            const def = pickParamName(param);
+            const def = pickParamName(param, specComment);
             result.push(def);
           });
         }
+        if (stmt.declaration.type === 'FunctionDeclaration') {
+          const { params } = stmt.declaration;
+          params.forEach((param: Parameter) => {
+            const def = pickParamName(param, specComment);
+            result.push(def);
+          });
+        }
+        // todo 先定义function，再export
         break;
     }
   });

@@ -33,9 +33,9 @@ export function def2params(defs: Dict<IDefinition>) {
   return Object.values(defs).map(({ data }) => ({
     in: HTTP_PARAM_LOCATION[data.in].toLowerCase(),
     name: data.name,
-    description: 'todo',
+    description: data.comment,
     required: !data.optional,
     type: EL_TYPE[data.type].toLowerCase(),
-    default:data.default,
+    default: data.default,
   } as ISwaggerParamBase));
 }

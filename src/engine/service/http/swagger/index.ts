@@ -45,6 +45,6 @@ export const genSwagger = (path: string = process.cwd()): ISwagger => {
     };
     swagger.paths[url][method] = route as ISwaggerRouter;
   });
-  // console.log(JSON.stringify(swagger));
+  console.log(JSON.stringify(swagger));
   return swagger;
 }

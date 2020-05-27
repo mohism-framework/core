@@ -14,12 +14,12 @@ describe('faas', () => {
     export default async(name:string='test',age=18,foo:string,bar:string[],baz:Array<string>,gaz:II)=>{}
     `;
     assert.deepEqual(parse(code), [
-      { name: 'name', typeName: 'string', defaultValue: 'test' },
-      { name: 'age', typeName: 'number', defaultValue: 18 },
-      { name: 'foo', typeName: 'string' },
-      { name: 'bar', typeName: 'Array<string>' },
-      { name: 'baz', typeName: 'Array<string>' },
-      { name: 'gaz', typeName: 'II' },
+      { comment: '', name: 'name', typeName: 'string', defaultValue: 'test' },
+      { comment: '', name: 'age', typeName: 'number', defaultValue: 18 },
+      { comment: '', name: 'foo', typeName: 'string' },
+      { comment: '', name: 'bar', typeName: 'Array<string>' },
+      { comment: '', name: 'baz', typeName: 'Array<string>' },
+      { comment: '', name: 'gaz', typeName: 'II' },
     ]);
   });
 
@@ -30,6 +30,7 @@ describe('faas', () => {
       {
         name: {
           data: {
+            comment: '',
             name: 'name',
             in: HTTP_PARAM_LOCATION.QUERY,
             type: 2,
@@ -38,6 +39,7 @@ describe('faas', () => {
         },
         foo: {
           data: {
+            comment: '',
             name: 'foo',
             in: HTTP_PARAM_LOCATION.QUERY,
             type: 3,
@@ -46,6 +48,7 @@ describe('faas', () => {
         },
         age: {
           data: {
+            comment: '',
             name: 'age',
             in: HTTP_PARAM_LOCATION.QUERY,
             type: 1,
@@ -61,6 +64,7 @@ describe('faas', () => {
       {
         name: {
           data: {
+            comment: '',
             name: 'name',
             in: HTTP_PARAM_LOCATION.BODY,
             type: 2,

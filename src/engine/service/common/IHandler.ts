@@ -2,6 +2,9 @@ import { Dict } from '@mohism/utils';
 import { IDefinition } from './param-definition/IDefinition';
 
 export interface IMiddleware {
+  /**
+   * 名字
+   */
   name(): string;
   /**
      * 入参定义

@@ -5,6 +5,6 @@ import { assert } from 'chai';
 describe('scanHandler', () => {
   it('scan', () => {
     const handlers = scanHandler(`${__dirname}/cases/src`);
-    assert.equal(handlers.length, 2);
+    assert.equal(handlers.length, 1);
   });
 });

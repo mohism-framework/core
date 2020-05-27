@@ -19,6 +19,7 @@ export const transform = (paramDefs: Array<IParamDef>, method: HTTP_METHODS = GE
       name,
       typeName,
       defaultValue,
+      comment,
     } = paramDef;
     let def: IDefinition = HttpPick(name);
     if (method === GET) {
@@ -41,6 +42,7 @@ export const transform = (paramDefs: Array<IParamDef>, method: HTTP_METHODS = GE
     } else {
       def = (def as CommonDefinition).required();
     }
+    def.data.comment = comment;
     definitions[name] = def;
   });
 
