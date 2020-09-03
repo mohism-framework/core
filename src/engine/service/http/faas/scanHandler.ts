@@ -17,11 +17,14 @@ export default (srcPath: string, withComment = false): Array<IHttpHandler> => {
     readdirSync(handlerPath).forEach((file: string) => {
       if (!statSync(`${handlerPath}/${file}`).isDirectory()
         && ['.ts', '.js'].includes(extname(file))) {
+        if (file.endsWith('.d.ts')) {
+          return;
+        }
         const handler = require(`${handlerPath}/${file}`.replace(extname(file), ''));
         if (handler.default instanceof AHttpHandler) {
           result.push(handler.default);
         } else if (typeof handler.default === 'function') {
-          const codes = readFileSync(`${handlerPath}/${file}`).toString();
+          const codes = readFileSync(`${handlerPath.replace('dist', 'src')}/${file.replace('.js', '.ts')}`).toString();
           const [defs, comment] = paramDef(codes);
           const autoParams = transform(defs);
           if (handler.params) {
