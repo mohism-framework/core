@@ -1,4 +1,4 @@
-import { Dict } from "@mohism/utils";
+import { Dict } from '@mohism/utils';
 
 export type SimpleKey =
   | 'TSUnknownKeyword'

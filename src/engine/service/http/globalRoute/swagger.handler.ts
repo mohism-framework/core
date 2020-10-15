@@ -1,11 +1,11 @@
-import { IHttpHandler } from "../httpHandler";
+import { IHttpHandler } from '../httpHandler';
 import { IMiddleware } from '../../common/IHandler';
-import { Dict } from "@mohism/utils";
-import { IDefinition } from "../../common/param-definition/IDefinition";
-import { HTTP_METHODS } from "../constant";
-import { resolve } from "path";
-import { existsSync, readFileSync } from "fs";
-import MohismError from "../../../../utils/mohism-error";
+import { Dict } from '@mohism/utils';
+import { IDefinition } from '../../common/param-definition/IDefinition';
+import { HTTP_METHODS } from '../constant';
+import { resolve } from 'path';
+import { existsSync, readFileSync } from 'fs';
+import MohismError from '../../../../utils/mohism-error';
 
 
 class SwaggerHandler implements IHttpHandler {

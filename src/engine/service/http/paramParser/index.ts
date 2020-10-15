@@ -16,7 +16,7 @@ const parseBody = (inc: IIncoming): Dict<any> => {
     }
   }
   throw new MohismError('bad request, only support application/json').setStatus(HTTP_STATUS.UnsupportedMediaType);
-}
+};
 
 const parseQuery = (inc: IIncoming): Dict<any> => {
   const pieces = (inc.url.split('?')[1] || '').split('&');
@@ -26,29 +26,29 @@ const parseQuery = (inc: IIncoming): Dict<any> => {
     v !== undefined && (query[k] = v);
   });
   return query;
-}
+};
 
 const parseHeaders = (inc: IIncoming): Dict<any> => {
   return inc.headers;
-}
+};
 
 const parseCookie = (inc: IIncoming): Dict<any> => {
-  const pieces = (inc.headers.cookie || '').split(/;\s?/)
+  const pieces = (inc.headers.cookie || '').split(/;\s?/);
   const cookie: Dict<any> = {};
   pieces.forEach((piece: string) => {
     const [k, v] = piece.split('=');
     v !== undefined && (cookie[k] = v);
   });
   return cookie;
-}
+};
 
-const parseParam = (inc: IIncoming): Dict<any> => {
+const parseParam = (): Dict<any> => {
   return {};
-}
+};
 
 const parsePath = (inc: IIncoming): string => {
   return inc.url.split('?')[0];
-}
+};
 
 export const Parser = (inc: IIncoming): IContext => {
   const result: IContext = {
@@ -57,8 +57,8 @@ export const Parser = (inc: IIncoming): IContext => {
     headers: parseHeaders(inc),
     query: parseQuery(inc),
     cookie: parseCookie(inc),
-    param: parseParam(inc),
+    param: parseParam(),
   };
 
   return result;
-}
+};

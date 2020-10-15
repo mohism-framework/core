@@ -1,8 +1,7 @@
-import { useModel } from './engine/service/hooks/index';
 export { MohismConf, AppMeta, UnifiedResponse } from './utils/global-type';
-export { default as MohismError } from './utils/mohism-error'
+export { default as MohismError } from './utils/mohism-error';
 
-export { HttpApplication } from './engine/service/http/httpApplication'
+export { HttpApplication } from './engine/service/http/httpApplication';
 export { default as HttpTestKit } from './engine/service/http/httpTestKit';
 export { HTTP_STATUS } from './engine/service/http/statusCode';
 

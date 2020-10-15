@@ -49,4 +49,4 @@ export const runHandler = async (context: IContext, handler: IMiddleware | IHand
   }
   const params = validate(context, handler.params());
   return handler.run(params);
-}
+};

@@ -1,12 +1,12 @@
 {
   "name": "@mohism/core",
-  "version": "0.4.11",
+  "version": "1.0.1",
   "description": "some libs of mohism",
   "main": "./dist/index.js",
   "scripts": {
     "lint": "npx eslint src/**/*.ts --cache --fix",
     "build": "npx eslint src/**/*.ts --cache --fix && npx tsc",
-    "test": "SUPPRESS_NO_CONFIG_WARNING=true npx mocha --recursive -r ts-node/register test/**/*.spec.ts",
+    "test": "npx cross-env NODE_OPTIONS=\"--trace-warnings\" mocha --recursive -r ts-node/register test/**/*.spec.ts",
     "cover": "SUPPRESS_NO_CONFIG_WARNING=true npx nyc npm test --skip-empty"
   },
   "author": "lanhao",
@@ -44,7 +44,7 @@
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "module-alias": "^2.2.2",
-    "mongoose": "^5.7.14"
+    "mongoose": "^5.10.9"
   },
   "repository": {
     "type": "git",

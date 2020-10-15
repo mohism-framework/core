@@ -149,26 +149,26 @@ export default (code: string): [Array<IParamDef>, IComment] => {
   const result: Array<IParamDef> = [];
   ast.body.forEach((stmt: Statement) => {
     switch (stmt.type) {
-      case 'ExportDefaultDeclaration':
-        specComment = nearbyComment(comments, stmt);
+    case 'ExportDefaultDeclaration':
+      specComment = nearbyComment(comments, stmt);
 
-        // 直接export function
-        if (stmt.declaration.type === 'ArrowFunctionExpression') {
-          const { params } = stmt.declaration;
-          params.forEach((param: Parameter) => {
-            const def = pickParamName(param, specComment);
-            result.push(def);
-          });
-        }
-        if (stmt.declaration.type === 'FunctionDeclaration') {
-          const { params } = stmt.declaration;
-          params.forEach((param: Parameter) => {
-            const def = pickParamName(param, specComment);
-            result.push(def);
-          });
-        }
-        // todo 先定义function，再export
-        break;
+      // 直接export function
+      if (stmt.declaration.type === 'ArrowFunctionExpression') {
+        const { params } = stmt.declaration;
+        params.forEach((param: Parameter) => {
+          const def = pickParamName(param, specComment);
+          result.push(def);
+        });
+      }
+      if (stmt.declaration.type === 'FunctionDeclaration') {
+        const { params } = stmt.declaration;
+        params.forEach((param: Parameter) => {
+          const def = pickParamName(param, specComment);
+          result.push(def);
+        });
+      }
+      // todo 先定义function，再export
+      break;
     }
   });
 

@@ -21,4 +21,4 @@ export const unifiedError = (err: Error | MohismError): UnifiedResponse => {
     code: appId * 1e6 + 500000,
     message: `Internal Server Error: ${err.message}`,
   };
-}
+};

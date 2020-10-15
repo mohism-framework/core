@@ -47,7 +47,7 @@ const fetchRecurse = (steps: Array<string>, layerDict: Dict<Layer>): IHandler | 
     }
   }
   return result;
-}
+};
 
 export class Router {
   private tree: Dict<Layer>;
@@ -103,20 +103,20 @@ export class Router {
 
 export const Route = (): Router => {
   return new Router();
-}
+};
 
 export const colorfy = (method: string): string => {
   switch (method) {
-    case 'GET':
-    case 'HEAD':
-      return green(method);
-    case 'POST':
-      return yellow(method);
-    case 'PUT':
-      return cyan(method);
-    case 'DELETE':
-      return red(method);
-    default:
-      return method;
+  case 'GET':
+  case 'HEAD':
+    return green(method);
+  case 'POST':
+    return yellow(method);
+  case 'PUT':
+    return cyan(method);
+  case 'DELETE':
+    return red(method);
+  default:
+    return method;
   }
-}
+};

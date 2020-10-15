@@ -33,9 +33,7 @@ export default (srcPath: string, withComment = false): Array<IHttpHandler> => {
                 continue;
               }
               // comment
-              if (withComment) {
-
-              }
+              if (withComment) { }
               autoParams[field] = {
                 ...autoParams[field],
                 ...handler.params[field],
@@ -58,4 +56,4 @@ export default (srcPath: string, withComment = false): Array<IHttpHandler> => {
     });
   }
   return result;
-}
+};

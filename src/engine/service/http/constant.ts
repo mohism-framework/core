@@ -5,7 +5,7 @@ export enum HTTP_METHODS {
   DELETE,
   HEAD,
   OPTION,
-};
+}
 
 export enum HTTP_PARAM_LOCATION {
   BODY = 1,

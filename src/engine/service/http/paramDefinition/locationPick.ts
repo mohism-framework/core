@@ -1,8 +1,8 @@
-import { IDefinition } from "../../common/param-definition/IDefinition";
+import { IDefinition } from '../../common/param-definition/IDefinition';
 import { Dict } from '@mohism/utils';
 
 import TypePicker from '../../common/param-definition/typePick';
-import { HTTP_PARAM_LOCATION } from "../constant";
+import { HTTP_PARAM_LOCATION } from '../constant';
 
 export default class LocationPick implements IDefinition {
   data: Dict<any>;

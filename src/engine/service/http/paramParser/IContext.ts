@@ -1,5 +1,5 @@
-import { Dict } from "@mohism/utils";
-import { IncomingHttpHeaders } from "http";
+import { Dict } from '@mohism/utils';
+import { IncomingHttpHeaders } from 'http';
 
 export interface IContext {
   path: string;

@@ -77,17 +77,17 @@ export const toType = (raw: any, type: EL_TYPE): any => {
     return raw;
   }
   switch (type) {
-    case EL_TYPE.NUMBER:
-      if (Number.isNaN(+raw)) {
-        return new Error();
-      }
-      return +raw;
-    case EL_TYPE.STRING:
-      return `${raw}`;
-    case EL_TYPE.BOOLEAN:
-      if (!['true', 'false', true, false].includes(raw)) {
-        return new Error();
-      }
-      return (raw === 'true' || raw === true) ? true : false;
+  case EL_TYPE.NUMBER:
+    if (Number.isNaN(+raw)) {
+      return new Error();
+    }
+    return +raw;
+  case EL_TYPE.STRING:
+    return `${raw}`;
+  case EL_TYPE.BOOLEAN:
+    if (!['true', 'false', true, false].includes(raw)) {
+      return new Error();
+    }
+    return (raw === 'true' || raw === true) ? true : false;
   }
 };

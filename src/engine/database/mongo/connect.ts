@@ -46,7 +46,7 @@ const connect = async (name: string = 'default'): Promise<Mongoose> => {
     ...options,
   });
   return connection;
-}
+};
 
 export const init = async () => {
   const mongoConf: object = get('mongo', {});
@@ -57,11 +57,11 @@ export const init = async () => {
     Pool[name] = conn;
     logger.info(`Mongo ${rightpad(name, 16)} [${'ok'.green}]`);
   }
-}
+};
 
 export default async (name: string = 'default'): Promise<Mongoose> => {
   if (!Pool[name]) {
     Pool[name] = await connect(name);
   }
   return Pool[name];
-}
+};

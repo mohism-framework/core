@@ -29,9 +29,9 @@ export const genSwagger = (path: string = process.cwd()): ISwagger => {
       url,
       method,
     ] = [
-        handler.path(),
-        HTTP_METHODS[handler.method()].toLowerCase(),
-      ];
+      handler.path(),
+      HTTP_METHODS[handler.method()].toLowerCase(),
+    ];
     swagger.paths[url] = swagger.paths[url] || {};
     const route = {
       tags: [],
@@ -47,4 +47,4 @@ export const genSwagger = (path: string = process.cwd()): ISwagger => {
   });
   console.log(JSON.stringify(swagger));
   return swagger;
-}
+};
