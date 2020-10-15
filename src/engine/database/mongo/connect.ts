@@ -1,4 +1,4 @@
-import { get, has } from 'config';
+import { get } from '@mohism/config';
 import mongoose, { ConnectionOptions, Mongoose } from 'mongoose';
 import { Logger, Dict, rightpad } from '@mohism/utils';
 import { cpus } from 'os';
@@ -26,7 +26,7 @@ const connect = async (name: string = 'default'): Promise<Mongoose> => {
     replicaSet = '',
     dbname = 'test',
     options = {},
-  } = has(`mongo.${name}`) ? get(`mongo.${name}`) : {};
+  } = get(`mongo.${name}`, {});
   let dsn: string;
   // dsn
   if (slave.length) {
@@ -49,7 +49,7 @@ const connect = async (name: string = 'default'): Promise<Mongoose> => {
 }
 
 export const init = async () => {
-  const mongoConf: object = has('mongo') ? get('mongo') : {};
+  const mongoConf: object = get('mongo', {});
   const connectionNames = Object.keys(mongoConf);
   for (let i = 0; i < connectionNames.length; i++) {
     const name = connectionNames[i];

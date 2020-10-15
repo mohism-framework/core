@@ -1,6 +1,6 @@
 {
   "name": "@mohism/core",
-  "version": "0.4.7",
+  "version": "0.4.11",
   "description": "some libs of mohism",
   "main": "./dist/index.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "typescript": "^3.6.4"
   },
   "dependencies": {
+    "@mohism/config": "^0.2.1",
     "@mohism/simon": "^1.0.5",
     "@mohism/utils": "^1.1.3",
     "@types/config": "0.0.36",

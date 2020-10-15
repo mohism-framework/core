@@ -47,12 +47,15 @@ export default abstract class BaseApplication implements IApplication {
   private async scanModel() {
     this._db = new Getter<Mongoose>(Pool);
     const modelPath = resolve(this.basePath, 'models');
-    
+
     if (existsSync(modelPath) && statSync(modelPath).isDirectory()) {
       const allModels: Dict<Model<Document>> = {};
       const files = readdirSync(modelPath);
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
+        if (file.endsWith('.d.ts')) {
+          continue;
+        }
         const id: string = file.split('.')[0];
         if (!['.js', '.ts'].includes(extname(file))) {
           continue;
