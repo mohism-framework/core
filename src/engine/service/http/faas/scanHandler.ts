@@ -26,7 +26,7 @@ export default (srcPath: string, withComment = false): Array<IHttpHandler> => {
         } else if (typeof handler.default === 'function') {
           const codes = readFileSync(`${handlerPath.replace('dist', 'src')}/${file.replace('.js', '.ts')}`).toString();
           const [defs, comment] = paramDef(codes);
-          const autoParams = transform(defs);
+          const autoParams = transform(defs, handler.method || HTTP_METHODS.GET);
           if (handler.params) {
             for (let field in handler.params) {
               if (!autoParams[field]) {

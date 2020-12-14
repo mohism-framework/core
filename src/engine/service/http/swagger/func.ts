@@ -19,7 +19,7 @@ export function getConfig(basePath: string) {
     throw new Error(`类型 ${mohismConf.type || '?'} 不支持生成swagger`);
   }
   const { version, description } = require(join(basePath, 'package.json'));
-  const httpConf: HttpConf = require(join(basePath, 'config', 'default.json')).http;
+  const httpConf: HttpConf = require(join(basePath, 'config', `${process.env.NODE_ENV || 'global'}.json`)).http;
   return {
     ...mohismConf,
     projectRoot: basePath,

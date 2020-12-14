@@ -24,11 +24,13 @@ describe('global-route', () => {
     try {
       await Swagger.run();
     } catch (e) {
-      assert.equal(e.message, 'swagger.json not found.');
+      assert.equal(e.message, '类型 ? 不支持生成swagger');
     }
     const realCwd = process.cwd();
-    process.chdir(`${process.cwd()}/test`);
-    assert.deepEqual(await Swagger.run(), '{"for":"test"}');
+    process.chdir(`${process.cwd()}/test/cases`);
+    console.log(await Swagger.run());
+    const data = await Swagger.run();
+    expect(data).is.haveOwnProperty('swagger');
     process.chdir(realCwd);
   });
 

@@ -35,36 +35,36 @@ export const validate = (ctx: IContext, rules: Dict<IDefinition>): Dict<any> => 
     // validation 
     // length   
     if (data.length !== undefined && !(value.length >= data.length[0] && value.length <= data.length[1])) {
-      throw new MohismError(`Validation Error: ${data.name} length must in ${JSON.stringify(data.length)}`).setStatus(HTTP_STATUS.OK);
+      throw new MohismError(`Validation Error: ${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name} length must in ${JSON.stringify(data.length)}`).setStatus(HTTP_STATUS.OK);
     }
     // range
     if (data.range !== undefined) {
       if (data.range.min) {
         if (data.range.min.e && value < data.range.min.n) {
-          throw new MohismError(`Validation Error: ${data.name} must gte ${data.range.min.n}`).setStatus(HTTP_STATUS.OK);
+          throw new MohismError(`Validation Error: ${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name} must gte ${data.range.min.n}`).setStatus(HTTP_STATUS.OK);
         } else if (!(value > data.range.min.n)) {
-          throw new MohismError(`Validation Error: ${data.name} must gt ${data.range.min.n}`).setStatus(HTTP_STATUS.OK);
+          throw new MohismError(`Validation Error: ${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name} must gt ${data.range.min.n}`).setStatus(HTTP_STATUS.OK);
         }
       }
       if (data.range.max) {
         if (data.range.max.e && !(value <= data.range.max.n)) {
-          throw new MohismError(`Validation Error: ${data.name} must lte ${data.range.max.n}`).setStatus(HTTP_STATUS.OK);
+          throw new MohismError(`Validation Error: ${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name} must lte ${data.range.max.n}`).setStatus(HTTP_STATUS.OK);
         } else if (!(value < data.range.max.n)) {
-          throw new MohismError(`Validation Error: ${data.name} must lt ${data.range.max.n}`).setStatus(HTTP_STATUS.OK);
+          throw new MohismError(`Validation Error: ${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name} must lt ${data.range.max.n}`).setStatus(HTTP_STATUS.OK);
         }
       }
     }
     // choices
     if (data.choices !== undefined && !data.choices.includes(value)) {
-      throw new MohismError(`Validation Error: ${data.name} must be one of ${JSON.stringify(data.choices)}`).setStatus(HTTP_STATUS.OK);
+      throw new MohismError(`Validation Error: ${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name} must be one of ${JSON.stringify(data.choices)}`).setStatus(HTTP_STATUS.OK);
     }
     // excludes
     if (data.excludes !== undefined && data.excludes.includes(value)) {
-      throw new MohismError(`Validation Error: ${data.name} should NOT be one of ${JSON.stringify(data.excludes)}`).setStatus(HTTP_STATUS.OK);
+      throw new MohismError(`Validation Error: ${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name} should NOT be one of ${JSON.stringify(data.excludes)}`).setStatus(HTTP_STATUS.OK);
     }
 
     if (data.contains !== undefined && !(`${value}` as string).includes(data.contains)) {
-      throw new MohismError(`Validation Error: ${data.name} must contains '${data.contains}'`).setStatus(HTTP_STATUS.OK);
+      throw new MohismError(`Validation Error: ${HTTP_PARAM_LOCATION[data.in].toLowerCase()}.${data.name} must contains '${data.contains}'`).setStatus(HTTP_STATUS.OK);
     }
     result[key] = value;
   });

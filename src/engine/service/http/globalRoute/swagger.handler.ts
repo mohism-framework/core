@@ -1,11 +1,10 @@
-import { IHttpHandler } from '../httpHandler';
-import { IMiddleware } from '../../common/IHandler';
 import { Dict } from '@mohism/utils';
+
+import { IMiddleware } from '../../common/IHandler';
 import { IDefinition } from '../../common/param-definition/IDefinition';
 import { HTTP_METHODS } from '../constant';
-import { resolve } from 'path';
-import { existsSync, readFileSync } from 'fs';
-import MohismError from '../../../../utils/mohism-error';
+import { IHttpHandler } from '../httpHandler';
+import { genSwagger } from '../swagger';
 
 
 class SwaggerHandler implements IHttpHandler {
@@ -30,15 +29,7 @@ class SwaggerHandler implements IHttpHandler {
   }
 
   async run(): Promise<any> {
-    const filePath: string = resolve(`${process.cwd()}/swagger.json`);
-    let swagger: string = '';
-    if (existsSync(filePath)) {
-      swagger = readFileSync(filePath).toString();
-    }
-    if (swagger === '') {
-      throw new MohismError('swagger.json not found.').setStatus(404);
-    }
-    return swagger;
+    return genSwagger(process.cwd());
   }
 }
 

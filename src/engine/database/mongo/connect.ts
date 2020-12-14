@@ -21,6 +21,7 @@ const connect = async (name: string = 'default'): Promise<Mongoose> => {
     username = '',
     password = '',
     host = '127.0.0.1',
+    authSource = 'admin',
     port = 27017,
     slave = [],
     replicaSet = '',
@@ -35,10 +36,10 @@ const connect = async (name: string = 'default'): Promise<Mongoose> => {
     slave.forEach((s: { host: string, port: string | number }) => {
       dsn += `,${s.host}:${s.port}`;
     });
-    dsn += `/${dbname}?replicaSet=${replicaSet}`;
+    dsn += `/${dbname}?replicaSet=${replicaSet}&authSource=${authSource}`;
   } else {
     // single
-    dsn = `mongodb://${username ? `${username}:${password}@` : ''}${host}:${port}/${dbname}`;
+    dsn = `mongodb://${username ? `${username}:${password}@` : ''}${host}:${port}/${dbname}?authSource=${authSource}`;
   }
   logger.info(`New Connection: ${dsn}`);
   const connection = await mongoose.connect(dsn, {
