@@ -83,7 +83,6 @@ export default abstract class BaseApplication implements IApplication {
               SEQ_POOL[status] = SEQ_POOL[status] || 1;
               instance.setSeq(SEQ_POOL[status]);
               SEQ_POOL[status]++;
-              console.log(instance.output());
             }
           });
       }
