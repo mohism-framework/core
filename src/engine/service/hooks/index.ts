@@ -13,8 +13,8 @@ export const bindHooks = async (app: BaseApplication) => {
  * 这个方法可以获取到一个模型实例 🤡
  * @param name 数据模型的名字
  */
-export const useModel = (name: string): Model<Document> => {
-  return application?.models?.get(name) as Model<Document>;
+export const useModel = <T extends Document>(name: string): Model<Document<T>> => {
+  return application?.models?.get(name) as Model<Document<T>>;
 };
 
 /**

@@ -41,7 +41,7 @@ export default abstract class BaseApplication implements IApplication {
   /**
    * 实现这个方法
    */
-  async abstract boot(): Promise<void>;
+  abstract boot(): Promise<void>;
 
   /* istanbul ignore next */
   private async scanModel() {
@@ -63,7 +63,7 @@ export default abstract class BaseApplication implements IApplication {
         const mod = require(`${modelPath}/${file}`.replace(extname(file), '')).default;
         allModels[id] = await mod();
       }
-      this._models = new Getter(allModels);
+      this._models = new Getter<Model<Document>>(allModels);
     }
   }
 

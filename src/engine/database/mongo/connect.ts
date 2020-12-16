@@ -1,5 +1,5 @@
 import { get } from '@mohism/config';
-import mongoose, { ConnectionOptions, Mongoose } from 'mongoose';
+import mongoose, { ConnectionOptions, ConnectOptions, Mongoose } from 'mongoose';
 import { Logger, Dict, rightpad } from '@mohism/utils';
 import { cpus } from 'os';
 
@@ -45,7 +45,7 @@ const connect = async (name: string = 'default'): Promise<Mongoose> => {
   const connection = await mongoose.connect(dsn, {
     ...defaultOptions,
     ...options,
-  });
+  } as ConnectOptions);
   return connection;
 };
 

@@ -1,6 +1,6 @@
 import { Dict, Maker } from '@mohism/utils';
 import { IMaker } from '@mohism/utils/dist/libs/lazy';
-import { Document, Model as MongooseModel, Mongoose, Schema } from 'mongoose';
+import { Document, Model, Mongoose, Schema } from 'mongoose';
 
 import get from './connect';
 
@@ -23,7 +23,8 @@ export default Model('app', {
   icon: { type: String, default: 'app' },
 });
  */
-const Model = (name: string, obj: Dict<any>, options: IModelOption = { connection: 'default' }): IMaker<MongooseModel<Document>> => {
+
+export default (name: string, obj: Dict<any>, options: IModelOption = { connection: 'default' }): IMaker<Model<Document>> => {
   return Maker(async () => {
     const schema: Schema = new Schema(obj, {
       versionKey: false,
@@ -33,5 +34,3 @@ const Model = (name: string, obj: Dict<any>, options: IModelOption = { connectio
     return conn.model(name, schema);
   });
 };
-
-export default Model;
