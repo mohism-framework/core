@@ -3,6 +3,7 @@ import { existsSync, readdirSync, statSync } from 'fs';
 import { Server } from 'http';
 import { Document, Model, Mongoose } from 'mongoose';
 import { extname, resolve } from 'path';
+import MohismError from '../../../utils/mohism-error';
 
 import { init, Pool } from '../../database/mongo/connect';
 import { IApplication } from '../common/IAppliaction';
@@ -64,6 +65,29 @@ export default abstract class BaseApplication implements IApplication {
         allModels[id] = await mod();
       }
       this._models = new Getter<Model<Document>>(allModels);
+      logger.info('Load Models [OK]');
+    }
+  }
+
+  /* istanbul ignore next */
+  private async scanError() {
+    const errorPath = resolve(this.basePath, 'errors');
+    if (existsSync(errorPath) && statSync(errorPath).isDirectory()) {
+      const files = readdirSync(errorPath);
+      const SEQ_POOL: Dict<number> = {};
+      for (let i = 0; i < files.length; i++) {
+        Object.values<MohismError | unknown>(require(`${errorPath}/${files[i]}`))
+          .forEach(instance => {
+            if (instance instanceof MohismError) {
+              const status = instance.getStatus();
+              SEQ_POOL[status] = SEQ_POOL[status] || 1;
+              instance.setSeq(SEQ_POOL[status]);
+              SEQ_POOL[status]++;
+              console.log(instance.output());
+            }
+          });
+      }
+      logger.info('Load Errors [OK]');
     }
   }
 
@@ -73,6 +97,7 @@ export default abstract class BaseApplication implements IApplication {
       // init db
       await init();
       await this.scanModel();
+      await this.scanError();
       await this.boot();
     } catch (e) {
       logger.err(e.message);

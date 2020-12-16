@@ -6,6 +6,7 @@ const DEFAULT_SEQ = 0;
 export default class MohismError extends Error {
   status: number;
   seq: number;
+  detail: string = '';
   constructor(message: string) {
     super(message);
     this.status = DEFAULT_STATUS;
@@ -21,6 +22,10 @@ export default class MohismError extends Error {
     return this;
   }
 
+  getStatus(): number {
+    return this.status;
+  }
+
   /**
    * 指定业务错误序号
    * @param code 0-999
@@ -34,7 +39,12 @@ export default class MohismError extends Error {
     return {
       status: this.status,
       code: this.seq,
-      message: this.message,
+      message: `${this.message}${this.detail && `: ${this.detail}`}`,
     };
+  }
+
+  setDetail(text: string) {
+    this.detail = text;
+    return this;
   }
 }

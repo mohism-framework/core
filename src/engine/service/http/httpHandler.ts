@@ -36,7 +36,7 @@ export abstract class AHttpHandler implements IHttpHandler {
     return [];
   }
 
-  abstract async run(params?: Dict<any>): Promise<any>;
+  abstract run(params?: Dict<any>): Promise<any>;
 }
 
 export const runHandler = async (context: IContext, handler: IMiddleware | IHandler): Promise<any> => {
