@@ -1,4 +1,4 @@
-import { Logger, rightpad } from '@mohism/utils';
+import { Logger, rightpad, Dict } from '@mohism/utils';
 import { blue, green, grey, yellow } from 'colors';
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 
@@ -45,9 +45,21 @@ export class HttpApplication extends BaseApplication {
     const { port = 3000, host = '0.0.0.0', cors = true } = this.config;
     this.server = createServer((req: IncomingMessage, res: ServerResponse) => {
       if (cors) {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Content-Length,Authorization,Accept,X-Requested-With');
-        res.setHeader('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS,HEAD');
+        res.setHeader(
+          'Access-Control-Allow-Origin',
+          (cors as Dict<string>)['Access-Control-Allow-Origin']
+          || '*',
+        );
+        res.setHeader(
+          'Access-Control-Allow-Headers',
+          (cors as Dict<string>)['Access-Control-Allow-Headers']
+          || 'Content-Type,Content-Length,Authorization,Accept,X-Requested-With',
+        );
+        res.setHeader(
+          'Access-Control-Allow-Methods',
+          (cors as Dict<string>)['Access-Control-Allow-Methods']
+          || 'PUT,POST,GET,DELETE,OPTIONS,HEAD',
+        );
       }
       const rawbody: Array<any> = [];
       req.on('data', (chunk: any) => {

@@ -1,3 +1,4 @@
+import { Dict } from '@mohism/utils';
 export enum HTTP_METHODS {
   GET = 1,
   POST,
@@ -19,7 +20,7 @@ export type NextFn = () => Promise<any>;
 export type HttpConf = {
   host?: string;
   port?: number;
-  cors?: boolean;
+  cors?: boolean | Dict<string>;
   verbose?: boolean;
   prefix?: string;
   strictHttpStatus?: boolean;
