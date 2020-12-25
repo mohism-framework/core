@@ -1,3 +1,4 @@
+import { Dict } from '@mohism/utils';
 import { existsSync, readdirSync, readFileSync, statSync } from 'fs';
 import { extname, resolve } from 'path';
 
@@ -41,8 +42,8 @@ export default (srcPath: string, withComment = false): Array<IHttpHandler> => {
               };
             }
           }
-
-          result.push({
+          const ObjectHandler = {
+            ctx: undefined,
             rawResponse: handler.rawResponse || false,
             path: () => (handler.path || `/${file.split('.')[0]}`),
             params: () => autoParams,
@@ -50,8 +51,15 @@ export default (srcPath: string, withComment = false): Array<IHttpHandler> => {
             name: () => (comment.comment || handler.name || file),
             description: () => (comment.comment || handler.name || file),
             method: () => (handler.method || HTTP_METHODS.GET),
-            run: async (params) => handler.default(...defs.map(def => params[def.name])),
-          });
+            run: async (params: Dict<any>) => {
+              const args = defs.map(def => params[def.name]);
+              if (ObjectHandler.ctx) {
+                args.push(ObjectHandler.ctx);
+              }
+              return handler.default(...args)
+            },
+          };
+          result.push(ObjectHandler);
         }
       }
     });

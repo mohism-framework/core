@@ -1,4 +1,6 @@
 import { Dict } from '@mohism/utils';
+import BaseApplication from '../http/abstractApplication';
+import { IContext } from '../http/paramParser/IContext';
 import { IDefinition } from './param-definition/IDefinition';
 
 /**
@@ -7,6 +9,8 @@ import { IDefinition } from './param-definition/IDefinition';
  * 这个可以被普通的中间件实现，也可以被接口handler实现，上面的基本要素还是要有
  */
 export interface IMiddleware {
+  app?: BaseApplication;
+  ctx?: IContext | undefined;
   /**
    * 名字
    */

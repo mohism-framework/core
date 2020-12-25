@@ -12,12 +12,10 @@ import { validate } from './validate';
  * 扩展了接口handler类型，强调是通过http协议接入(另一种可能的接入是 grpc)
  * 所以扩展了一些信息，比如 
  * - rawResponse 是否返回原始信息，默认是否，会包裹在 {code,msg,data}结构里
- * - app 挂载app对象到handler里，这个有待商榷，将来有可能下沉到 IHandler 甚至 IMiddleware 里
  * - method 因为是http实现，所以要补充描述 HTTP_METHODS
  */
 export interface IHttpHandler extends IHandler {
   rawResponse?: boolean;
-  app?: BaseApplication;
   method(): HTTP_METHODS;
 }
 
@@ -29,6 +27,7 @@ export interface IHttpHandler extends IHandler {
 export abstract class AHttpHandler implements IHttpHandler {
   rawResponse?: boolean = false;
   app?: BaseApplication;
+  ctx?: IContext | undefined;
   name(): string {
     return '';
   }
@@ -57,9 +56,14 @@ export const runHandler = async (context: IContext, handler: IMiddleware | IHand
   if (middleware.length > 0) {
     for (let i = 0; i < middleware.length; i++) {
       const params = validate(context, middleware[i].params());
+      middleware[i].ctx = context;
       await middleware[i].run(params);
+      middleware[i].ctx = undefined;
     }
   }
   const params = validate(context, handler.params());
-  return handler.run(params);
+  handler.ctx = context;
+  const result = await handler.run(params);
+  handler.ctx = undefined;
+  return result;
 };
