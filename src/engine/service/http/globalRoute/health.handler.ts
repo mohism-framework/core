@@ -22,6 +22,10 @@ class HealthHandler implements AHttpHandler {
     return 'health check';
   }
 
+  description(): string {
+    return 'health check with http';
+  }
+
   path(): string {
     return '/_health';
   }

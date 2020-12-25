@@ -11,8 +11,8 @@ export interface IMiddleware {
    */
   description?: () => string;
   /**
-     * 入参定义
-     */
+   * 入参定义
+   */
   params(): Dict<IDefinition>;
   /**
    * 执行的函数

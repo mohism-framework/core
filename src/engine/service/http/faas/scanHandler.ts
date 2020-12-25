@@ -41,12 +41,14 @@ export default (srcPath: string, withComment = false): Array<IHttpHandler> => {
               };
             }
           }
-          const faasObj = 
+
           result.push({
+            rawResponse: handler.rawResponse || false,
             path: () => (handler.path || `/${file.split('.')[0]}`),
             params: () => autoParams,
             middlewares: () => (handler.middlewares || []),
             name: () => (comment.comment || handler.name || file),
+            description: () => (comment.comment || handler.name || file),
             method: () => (handler.method || HTTP_METHODS.GET),
             run: async (params) => handler.default(...defs.map(def => params[def.name])),
           });

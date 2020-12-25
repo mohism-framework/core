@@ -29,7 +29,7 @@ describe('global-route', () => {
     const realCwd = process.cwd();
     process.chdir(`${process.cwd()}/test/cases`);
     const data = await Swagger.run();
-    expect(data).is.haveOwnProperty('swagger');
+    expect(JSON.parse(data)).is.haveOwnProperty('swagger');
     process.chdir(realCwd);
   });
 

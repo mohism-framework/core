@@ -8,6 +8,7 @@ import { genSwagger } from '../swagger';
 
 
 class SwaggerHandler implements IHttpHandler {
+  rawResponse = true;
   middlewares(): Array<IMiddleware> {
     return [];
   }
@@ -29,7 +30,7 @@ class SwaggerHandler implements IHttpHandler {
   }
 
   async run(): Promise<any> {
-    return genSwagger(process.cwd());
+    return JSON.stringify(genSwagger(process.cwd()));
   }
 }
 

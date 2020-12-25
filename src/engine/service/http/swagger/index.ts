@@ -35,7 +35,7 @@ export const genSwagger = (path: string = process.cwd()): ISwagger => {
     swagger.paths[url] = swagger.paths[url] || {};
     const route = {
       tags: [],
-      summary: handler.description ? handler.description() : 'no description',
+      summary: handler.name ? handler.name() : 'no summary',
       description: handler.description ? handler.description() : 'no description',
       operationId: '',
       consumes: ['application/json'],

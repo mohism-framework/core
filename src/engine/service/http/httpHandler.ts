@@ -9,12 +9,14 @@ import { validate } from './validate';
 
 
 export interface IHttpHandler extends IHandler {
+  rawResponse?: boolean;
   app?: BaseApplication;
   method(): HTTP_METHODS;
 }
 
 // Abstract
 export abstract class AHttpHandler implements IHttpHandler {
+  rawResponse?: boolean = false;
   app?: BaseApplication;
   name(): string {
     return '';

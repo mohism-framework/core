@@ -84,7 +84,9 @@ export class HttpApplication extends BaseApplication {
               data: v,
               message: 'ok',
             };
-            res.end(resStringify(response));
+            res.end(handler.rawResponse
+              ? v
+              : resStringify(response));
             if (this.config.verbose) {
               logger.info(`[${green('200')}] ${rightpad(inc.method, PAD)} ${context.path}`);
             }
