@@ -1,4 +1,4 @@
-import { ISwagger, ISwaggerRouter } from './type';
+import { ISwagger, ISwaggerParamBase, ISwaggerRouter } from './type';
 import { getConfig, def2params } from './func';
 import scanHandler from '../faas/scanHandler';
 import { join } from 'path';
@@ -24,14 +24,33 @@ export const genSwagger = (path: string = process.cwd()): ISwagger => {
     paths: {},
   };
   const handlers = scanHandler(join(conf.projectRoot, 'src'));
+
   handlers.forEach((handler: IHttpHandler) => {
     const [
       url,
       method,
     ] = [
-      handler.path(),
-      HTTP_METHODS[handler.method()].toLowerCase(),
+        handler.path(),
+        HTTP_METHODS[handler.method()].toLowerCase(),
+      ];
+
+    let parameters: Array<ISwaggerParamBase> = [];
+
+    const middlewares = handler.middlewares();
+    if (middlewares.length) {
+      middlewares.forEach(middleware => {
+        parameters = [
+          ...parameters,
+          ...def2params(middleware.params()),
+        ];
+      });
+    }
+    
+    parameters = [
+      ...parameters,
+      ...def2params(handler.params()),
     ];
+
     swagger.paths[url] = swagger.paths[url] || {};
     const route = {
       tags: [],
@@ -40,7 +59,7 @@ export const genSwagger = (path: string = process.cwd()): ISwagger => {
       operationId: '',
       consumes: ['application/json'],
       prodcues: ['application/json'],
-      parameters: def2params(handler.params()),
+      parameters,
       responses: {},
     };
     swagger.paths[url][method] = route as ISwaggerRouter;
