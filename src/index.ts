@@ -20,3 +20,5 @@ export { default as Model } from './engine/database/mongo/modelFactory';
 export { useModel, useDB } from './engine/service/hooks';
 
 export * from '@mohism/config';
+
+export { IContext } from './engine/service/http/paramParser/IContext';

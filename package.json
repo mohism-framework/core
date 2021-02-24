@@ -1,6 +1,6 @@
 {
   "name": "@mohism/core",
-  "version": "1.1.20",
+  "version": "1.1.22",
   "description": "some libs of mohism",
   "main": "./dist/index.js",
   "scripts": {
@@ -38,6 +38,7 @@
     "@typescript-eslint/typescript-estree": "^2.28.0",
     "colors": "^1.4.0",
     "config": "^3.2.4",
+    "cron-parser": "^3.2.0",
     "kcors": "^2.2.2",
     "koa": "^2.8.2",
     "koa-bodyparser": "^4.2.1",
