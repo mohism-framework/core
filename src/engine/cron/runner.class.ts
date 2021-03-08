@@ -17,8 +17,11 @@ export default class CronRunner {
     });
   }
 
-  private async run({ expr, func, name }: ICronexpr) {
+  private async run({ expr, func, name, immediate = false }: ICronexpr) {
     try {
+      if (immediate) {
+        await func();
+      }
       const next = parseExpression(expr).next().getTime() - Date.now();
       setTimeout(async () => {
         logger.info(`Run [${name}] at ${new Date().toLocaleTimeString()}`);
