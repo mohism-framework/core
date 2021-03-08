@@ -22,4 +22,4 @@ steps:
       from_secret: private_key
   when:
     status: [ success, failure ]
-    event: tag
+    event: pull_request
