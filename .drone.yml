@@ -17,3 +17,4 @@ steps:
   when:
     event: pull_request
   message: Hello World!
+  api_key: 8373ab1e79e5f54955a5d1c8c232b38d8638da42
