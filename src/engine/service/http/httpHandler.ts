@@ -3,7 +3,7 @@ import { Dict } from '@mohism/utils';
 import { IHandler, IMiddleware } from '../common/IHandler';
 import { IDefinition } from '../common/param-definition/IDefinition';
 import { HTTP_METHODS } from './constant';
-import BaseApplication from './abstractApplication';
+import BaseApplication from '../common/abstractApplication';
 import { IContext } from './paramParser/IContext';
 import { validate } from './validate';
 
