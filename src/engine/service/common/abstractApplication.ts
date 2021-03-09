@@ -1,30 +1,25 @@
 import { Dict, Getter, Logger } from '@mohism/utils';
 import { existsSync, readdirSync, statSync } from 'fs';
-import { Server } from 'http';
 import { Document, Model, Mongoose } from 'mongoose';
 import { extname, resolve } from 'path';
 import MohismError from '../../../utils/mohism-error';
 
 import { init, Pool } from '../../database/mongo/connect';
-import { IApplication } from '../common/IAppliaction';
+import { IApplication } from './IAppliaction';
 import { bindHooks } from '../hooks';
-import { HttpConf } from './constant';
 
 const logger = Logger();
 
 export type THooks = 'onReady' | 'onError';
 
 export default abstract class BaseApplication implements IApplication {
-  protected server: Server | null;
-  protected config: HttpConf;
   protected basePath: string;
   protected _db: Getter<Mongoose> | null;
   protected _models: Getter<Model<Document>> | null;
 
-  constructor(config: HttpConf, basePath: string) {
+  constructor(basePath: string) {
     this.basePath = basePath;
-    this.config = config || {};
-    this.server = null;
+
     this._db = null;
     this._models = null;
     // this is important!

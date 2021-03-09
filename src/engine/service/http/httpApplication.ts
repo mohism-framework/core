@@ -1,10 +1,10 @@
-import { Logger, rightpad, Dict } from '@mohism/utils';
+import { Dict, Logger, rightpad } from '@mohism/utils';
 import { blue, green, grey, yellow } from 'colors';
-import { createServer, IncomingMessage, ServerResponse } from 'http';
+import { createServer, IncomingMessage, Server, ServerResponse } from 'http';
 
+import BaseApplication from '../common/abstractApplication';
 import { unifiedError } from '../common/error-handler';
 import { IHandler } from '../common/IHandler';
-import BaseApplication from './abstractApplication';
 import { HTTP_METHODS, HttpConf } from './constant';
 import scanHandler from './faas/scanHandler';
 import { Health, Metrics, Swagger } from './globalRoute';
@@ -20,16 +20,19 @@ const logger = Logger();
 const PAD: number = 8;
 
 export class HttpApplication extends BaseApplication {
-
+  protected server: Server | null;
   private router: Router;
+  protected config: HttpConf;
 
   constructor(config: HttpConf, basePath: string) {
-    super(config, basePath);
+    super(basePath);
+    
+    this.config = config || {};
     if (process.env.NODE_ENV === 'production') {
       // force 'verbose' to false, for perfermence reason
       this.config = { ...this.config, verbose: false };
     }
-
+    this.server = null;
     this.router = new Router({
       prefix: config.prefix,
     });

@@ -1,5 +1,5 @@
 import { Dict } from '@mohism/utils';
-import BaseApplication from '../http/abstractApplication';
+import BaseApplication from './abstractApplication';
 import { IContext } from '../http/paramParser/IContext';
 import { IDefinition } from './param-definition/IDefinition';
 

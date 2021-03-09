@@ -1,6 +1,6 @@
 import { Document, Model, Mongoose } from 'mongoose';
 
-import BaseApplication from '../http/abstractApplication';
+import BaseApplication from '../common/abstractApplication';
 
 let application: BaseApplication | null = null;
 
