@@ -22,3 +22,6 @@ export { useModel, useDB } from './engine/service/hooks';
 export * from '@mohism/config';
 
 export { IContext } from './engine/service/http/paramParser/IContext';
+
+export { default as CronRunner } from './engine/cron/runner.class';
+export { ICronexpr } from './engine/cron/type';
