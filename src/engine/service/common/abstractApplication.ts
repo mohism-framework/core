@@ -4,9 +4,12 @@ import { Document, Model, Mongoose } from 'mongoose';
 import { extname, resolve } from 'path';
 import MohismError from '../../../utils/mohism-error';
 
-import { init, Pool } from '../../database/mongo/connect';
+import { initMongo } from '../../database/mongo/connect';
+import { initRedis } from '../../database/redis/connect';
 import { IApplication } from './IAppliaction';
 import { bindHooks } from '../hooks';
+import { Redis } from 'ioredis';
+
 
 const logger = Logger();
 
@@ -14,16 +17,21 @@ export type THooks = 'onReady' | 'onError';
 
 export default abstract class BaseApplication implements IApplication {
   protected basePath: string;
+  protected _redis: Getter<Redis> | null;
   protected _db: Getter<Mongoose> | null;
   protected _models: Getter<Model<Document>> | null;
 
   constructor(basePath: string) {
     this.basePath = basePath;
-
+    this._redis = null;
     this._db = null;
     this._models = null;
     // this is important!
     bindHooks(this);
+  }
+
+  get redis() {
+    return this._redis;
   }
 
   get db() {
@@ -41,7 +49,6 @@ export default abstract class BaseApplication implements IApplication {
 
   /* istanbul ignore next */
   private async scanModel() {
-    this._db = new Getter<Mongoose>(Pool);
     const modelPath = resolve(this.basePath, 'models');
 
     if (existsSync(modelPath) && statSync(modelPath).isDirectory()) {
@@ -89,12 +96,13 @@ export default abstract class BaseApplication implements IApplication {
   public async bootstrap() {
     try {
       // init db
-      await init();
+      this._db = await initMongo();
       await this.scanModel();
+      await initRedis();
       await this.scanError();
       await this.boot();
     } catch (e) {
       logger.err(e.message);
     }
   }
-} 
+}

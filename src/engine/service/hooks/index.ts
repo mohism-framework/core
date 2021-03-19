@@ -1,6 +1,7 @@
 import { Document, Model, Mongoose } from 'mongoose';
 
 import BaseApplication from '../common/abstractApplication';
+import { Redis } from 'ioredis';
 
 let application: BaseApplication | null = null;
 
@@ -24,3 +25,12 @@ export const useModel = <T extends Document>(name: string): Model<T> => {
 export const useDB = (name: string): Mongoose => {
   return application?.db?.get(name) as Mongoose;
 };
+
+/**
+ * 根据配置文件里定义的 redis 连接，用 名字 可以获取
+ * @param name 
+ * @returns 
+ */
+export const useRedis = (name: string): Redis => {
+  return application?.redis?.get(name) as Redis;
+}
