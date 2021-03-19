@@ -17,7 +17,7 @@ export { NextFn, HTTP_METHODS, HTTP_PARAM_LOCATION, HttpConf } from './engine/se
 
 export { default as Model } from './engine/database/mongo/modelFactory';
 
-export { useModel, useDB } from './engine/service/hooks';
+export { useModel, useDB, useRedis } from './engine/service/hooks';
 
 export * from '@mohism/config';
 

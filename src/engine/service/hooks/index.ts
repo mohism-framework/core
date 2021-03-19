@@ -22,7 +22,7 @@ export const useModel = <T extends Document>(name: string): Model<T> => {
  * 对于一些特殊场景，可以通过这个方法得到一个DB实例
  * @param name 
  */
-export const useDB = (name: string): Mongoose => {
+export const useDB = (name: string ='default'): Mongoose => {
   return application?.db?.get(name) as Mongoose;
 };
 
@@ -31,6 +31,6 @@ export const useDB = (name: string): Mongoose => {
  * @param name 
  * @returns 
  */
-export const useRedis = (name: string): Redis => {
+export const useRedis = (name: string ='default'): Redis => {
   return application?.redis?.get(name) as Redis;
 }
