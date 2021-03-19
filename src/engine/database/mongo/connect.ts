@@ -1,6 +1,6 @@
 import { get } from '@mohism/config';
 import mongoose, { ConnectionOptions, ConnectOptions, Mongoose } from 'mongoose';
-import { Logger, Dict, rightpad } from '@mohism/utils';
+import { Logger, Dict, rightpad, Getter } from '@mohism/utils';
 import { cpus } from 'os';
 
 const logger = Logger();
@@ -14,7 +14,7 @@ const defaultOptions: ConnectionOptions = {
   useUnifiedTopology: true,
   family: 4,
 };
-export const Pool: Dict<Mongoose> = {};
+const Pool: Dict<Mongoose> = {};
 
 const connect = async (name: string = 'default'): Promise<Mongoose> => {
   const {
@@ -49,7 +49,7 @@ const connect = async (name: string = 'default'): Promise<Mongoose> => {
   return connection;
 };
 
-export const init = async () => {
+export const initMongo = async () => {
   const mongoConf: object = get('mongo', {});
   const connectionNames = Object.keys(mongoConf);
   for (let i = 0; i < connectionNames.length; i++) {
@@ -58,6 +58,7 @@ export const init = async () => {
     Pool[name] = conn;
     logger.info(`Mongo ${rightpad(name, 16)} [${'ok'.green}]`);
   }
+  return new Getter<Mongoose>(Pool);
 };
 
 export default async (name: string = 'default'): Promise<Mongoose> => {
