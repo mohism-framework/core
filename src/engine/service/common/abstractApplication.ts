@@ -98,7 +98,7 @@ export default abstract class BaseApplication implements IApplication {
       // init db
       this._db = await initMongo();
       await this.scanModel();
-      await initRedis();
+      this._redis = await initRedis();
       await this.scanError();
       await this.boot();
     } catch (e) {
