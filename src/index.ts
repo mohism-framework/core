@@ -25,3 +25,5 @@ export { IContext } from './engine/service/http/paramParser/IContext';
 
 export { default as CronApplication } from './engine/service/cron/cronApplication';
 export { ICronexpr } from './engine/service/cron/type';
+
+export { default as TestApplication } from './engine/service/test/testApplication';
