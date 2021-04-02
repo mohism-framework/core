@@ -13,7 +13,6 @@
   "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.2.5",
-    "@types/ioredis": "^4.22.0",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.35",
     "@typescript-eslint/eslint-plugin": "^2.3.3",
@@ -28,6 +27,7 @@
     "typescript": "^3.6.4"
   },
   "dependencies": {
+    "@types/ioredis": "^4.22.0",
     "@mohism/config": "^0.2.3",
     "@mohism/simon": "^1.0.5",
     "@mohism/utils": "^1.1.10",
