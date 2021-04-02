@@ -9,7 +9,7 @@ import HttpTestKit from '../src/engine/service/http/httpTestKit';
 
 import { resStringify } from '../src/engine/service/http/utils';
 import { IHttpHandler } from '../src/engine/service/http/httpHandler';
-import { useModel, useDB } from '../src/engine/service/hooks/index';
+import { useModel, useDB, useRedis } from '../src/engine/service/hooks/index';
 import MohismError from '../src/utils/mohism-error';
 
 const fn: IHttpHandler = {
@@ -156,6 +156,10 @@ describe('httpApp', () => {
 
   it('hooks-useDB', () => {
     assert.equal(useDB(''), undefined);
+  });
+
+  it('hooks-useRedis', () => {
+    assert.equal(useRedis(''), undefined);
   });
 
   it('get-status', () => {

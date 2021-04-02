@@ -30,6 +30,7 @@ export default abstract class BaseApplication implements IApplication {
     bindHooks(this);
   }
 
+  /* istanbul ignore next */
   get redis() {
     return this._redis;
   }
