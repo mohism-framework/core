@@ -151,7 +151,7 @@ export class HttpApplication extends BaseApplication {
     this.listen();
     if (process.env.NODE_ENV !== 'production') {
       const { host, port } = this.config;
-      logger.info(`See: ${blue(`http://${host}:${port}/_swagger`)}`);
+      logger.info(`See: ${blue(`http://${host}:${port}/_doc`)}`);
     }
   }
 
