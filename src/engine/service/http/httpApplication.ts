@@ -7,7 +7,7 @@ import { unifiedError } from '../common/error-handler';
 import { IHandler } from '../common/IHandler';
 import { HTTP_METHODS, HttpConf } from './constant';
 import scanHandler from './faas/scanHandler';
-import { Health, Metrics, Swagger } from './globalRoute';
+import { Health, Metrics, Swagger, Doc } from './globalRoute';
 import { IHttpHandler, runHandler } from './httpHandler';
 import { Parser } from './paramParser';
 import { IContext, IIncoming } from './paramParser/IContext';
@@ -142,6 +142,7 @@ export class HttpApplication extends BaseApplication {
     // mount global route
     this.mount(Health);
     this.mount(Swagger);
+    this.mount(Doc);
     this.mount(Metrics);
 
     // mount customer handler
