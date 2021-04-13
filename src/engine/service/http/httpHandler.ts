@@ -15,6 +15,7 @@ import { validate } from './validate';
  * - method 因为是http实现，所以要补充描述 HTTP_METHODS
  */
 export interface IHttpHandler extends IHandler {
+  contentType?: string;
   rawResponse?: boolean;
   method(): HTTP_METHODS;
 }
@@ -26,6 +27,7 @@ export interface IHttpHandler extends IHandler {
  */
 export abstract class AHttpHandler implements IHttpHandler {
   rawResponse?: boolean = false;
+  contentType?: string = 'application/json';
   app?: BaseApplication;
   ctx?: IContext | undefined;
   name(): string {

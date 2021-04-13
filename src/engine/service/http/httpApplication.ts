@@ -70,7 +70,7 @@ export class HttpApplication extends BaseApplication {
       });
 
       req.on('end', () => {
-        res.setHeader('content-type', 'application/json');
+        
         const inc: IIncoming = {
           url: req.url as string,
           body: rawbody.join(''),
@@ -81,6 +81,7 @@ export class HttpApplication extends BaseApplication {
         try {
           const context: IContext = Parser(inc);
           const handler: IHttpHandler = this.fetch(inc.method, context.path) as IHttpHandler;
+          res.setHeader('content-type', handler.contentType || 'application/json');
           runHandler(context, handler).then((v: any) => {
             const response = {
               code: 0,
