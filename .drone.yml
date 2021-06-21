@@ -7,16 +7,10 @@ steps:
 - name: test
   image: node
   commands:
-  - ls
+  - npm i
+  - npm test
   when:
     event: pull_request
-
-- name: github-comment
-  image: jmccann/drone-github-comment:1
-  when:
-    event: pull_request
-  message: Hello World!
-  api_key: 13dcc077e40036734686f1c412f801f88e44dec9
 
 trigger:
   event:
