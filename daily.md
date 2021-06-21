@@ -1,6 +1,5 @@
 ### 2021年04月02日
 
-
 > mohism 开发API的方式，应该是写一个[简单函数](./notes/simple-function.md)
 >
 > 然后如果需要用到底层基础设施（比如 mongo, redis），会提供一些“取用函数”
