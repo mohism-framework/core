@@ -1,6 +1,6 @@
 import { Dict, Getter, Logger } from '@mohism/utils';
 import { existsSync, readdirSync, statSync } from 'fs';
-import { Document, Model, Mongoose } from 'mongoose';
+import { Document, Model, Mongoose, Connection } from 'mongoose';
 import { extname, resolve } from 'path';
 import MohismError from '../../../utils/mohism-error';
 
@@ -18,7 +18,7 @@ export type THooks = 'onReady' | 'onError';
 export default abstract class BaseApplication implements IApplication {
   protected basePath: string;
   protected _redis: Getter<Redis> | null;
-  protected _db: Getter<Mongoose> | null;
+  protected _db: Getter<Connection> | null;
   protected _models: Getter<Model<Document>> | null;
 
   constructor(basePath: string) {
@@ -103,7 +103,7 @@ export default abstract class BaseApplication implements IApplication {
       await this.scanError();
       await this.boot();
     } catch (e) {
-      logger.err(e.message);
+      logger.err((e as Error).message);
     }
   }
 }

@@ -1,5 +1,5 @@
 import { get } from '@mohism/config';
-import mongoose, { ConnectionOptions, ConnectOptions, Mongoose } from 'mongoose';
+import mongoose, { Connection, ConnectionOptions, ConnectOptions } from 'mongoose';
 import { Logger, Dict, rightpad, Getter } from '@mohism/utils';
 import { cpus } from 'os';
 
@@ -14,9 +14,9 @@ const defaultOptions: ConnectionOptions = {
   useUnifiedTopology: true,
   family: 4,
 };
-const Pool: Dict<Mongoose> = {};
+const Pool: Dict<Connection> = {};
 
-const connect = async (name: string = 'default'): Promise<Mongoose> => {
+const connect = async (name: string = 'default'): Promise<Connection> => {
   const {
     username = '',
     password = '',
@@ -42,7 +42,7 @@ const connect = async (name: string = 'default'): Promise<Mongoose> => {
     dsn = `mongodb://${username ? `${username}:${password}@` : ''}${host}:${port}/${dbname}?authSource=${authSource}`;
   }
   logger.info(`New Connection: ${dsn}`);
-  const connection = await mongoose.connect(dsn, {
+  const connection = await mongoose.createConnection(dsn, {
     ...defaultOptions,
     ...options,
   } as ConnectOptions);
@@ -58,10 +58,10 @@ export const initMongo = async () => {
     Pool[name] = conn;
     logger.info(`Mongo ${rightpad(name, 16)} [${'ok'.green}]`);
   }
-  return new Getter<Mongoose>(Pool);
+  return new Getter<Connection>(Pool);
 };
 
-export default async (name: string = 'default'): Promise<Mongoose> => {
+export default async (name: string = 'default'): Promise<Connection> => {
   if (!Pool[name]) {
     Pool[name] = await connect(name);
   }

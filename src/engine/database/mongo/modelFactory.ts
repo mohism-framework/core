@@ -1,6 +1,6 @@
 import { Dict, Maker } from '@mohism/utils';
 import { IMaker } from '@mohism/utils/dist/libs/lazy';
-import { Document, Model, Mongoose, Schema } from 'mongoose';
+import { Connection, Document, Model, Schema } from 'mongoose';
 
 import get from './connect';
 
@@ -30,7 +30,7 @@ export default (name: string, obj: Dict<any>, options: IModelOption = { connecti
       versionKey: false,
       timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
     });
-    const conn: Mongoose = await get(options.connection);
+    const conn: Connection = await get(options.connection);
     return conn.model(name, schema);
   });
 };
