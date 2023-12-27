@@ -14,6 +14,7 @@ import { IContext, IIncoming } from './paramParser/IContext';
 import { colorfy, Router } from './router';
 import { HTTP_STATUS } from './statusCode';
 import { resStringify } from './utils';
+import MohismError from '../../../utils/mohism-error';
 
 const logger = Logger();
 
@@ -102,9 +103,9 @@ export class HttpApplication extends BaseApplication {
             }
           });
 
-        } catch (e) {
-          res.statusCode = this.getStatus(e);
-          res.end(resStringify(unifiedError(e)));
+        } catch (e:unknown) {
+          res.statusCode = this.getStatus(e as MohismError);
+          res.end(resStringify(unifiedError(e as MohismError)));
           if (this.config.verbose) {
             logger.info(`[${yellow(`${res.statusCode}`)}] ${rightpad(inc.method, PAD)} ${inc.url}`);
           }

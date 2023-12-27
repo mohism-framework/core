@@ -1,22 +1,21 @@
 import { get } from '@mohism/config';
-import mongoose, { Connection, ConnectionOptions, ConnectOptions } from 'mongoose';
+import mongoose, { ConnectOptions, Mongoose } from 'mongoose';
 import { Logger, Dict, rightpad, Getter } from '@mohism/utils';
 import { cpus } from 'os';
-
 const logger = Logger();
 
 mongoose.Promise = global.Promise;
 mongoose.pluralize(undefined);
 
-const defaultOptions: ConnectionOptions = {
+const defaultOptions = {
   useNewUrlParser: true,
   poolSize: cpus().length || 10,
   useUnifiedTopology: true,
   family: 4,
 };
-const Pool: Dict<Connection> = {};
+const Pool: Dict<Mongoose> = {};
 
-const connect = async (name: string = 'default'): Promise<Connection> => {
+const connect = async (name: string = 'default'): Promise<Mongoose> => {
   const {
     username = '',
     password = '',
@@ -42,11 +41,10 @@ const connect = async (name: string = 'default'): Promise<Connection> => {
     dsn = `mongodb://${username ? `${username}:${password}@` : ''}${host}:${port}/${dbname}?authSource=${authSource}`;
   }
   logger.info(`New Connection: ${dsn}`);
-  const connection = await mongoose.createConnection(dsn, {
+  return await mongoose.connect(dsn, {
     ...defaultOptions,
     ...options,
   } as ConnectOptions);
-  return connection;
 };
 
 export const initMongo = async () => {
@@ -58,10 +56,10 @@ export const initMongo = async () => {
     Pool[name] = conn;
     logger.info(`Mongo ${rightpad(name, 16)} [${'ok'.green}]`);
   }
-  return new Getter<Connection>(Pool);
+  return new Getter<Mongoose>(Pool);
 };
 
-export default async (name: string = 'default'): Promise<Connection> => {
+export default async (name: string = 'default'): Promise<Mongoose> => {
   if (!Pool[name]) {
     Pool[name] = await connect(name);
   }

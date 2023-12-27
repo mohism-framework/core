@@ -19,6 +19,7 @@ export default class CronApplication extends BaseApplication {
     const jobsPath = resolve(`${this.basePath}/jobs`);
     const result: Array<ICronexpr> = [];
     readdirSync(jobsPath).forEach(file => {
+      if (file.endsWith('.d.ts')) return;
       const job: ICronexpr = require(join(jobsPath, file).replace(extname(file), '')).default;
       this.jobs[job.name] = job;
     })
@@ -42,8 +43,8 @@ export default class CronApplication extends BaseApplication {
         logger.info(`Run [${name}] Done!${EOL}`);
         this.run({ expr, func, name });
       }, next);
-    } catch (e) {
-      logger.err(`[${name}] ${e.message}`);
+    } catch (e: unknown) {
+      logger.err(`[${name}] ${(e as Error).message}`);
     }
   }
 

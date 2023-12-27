@@ -23,8 +23,8 @@ describe('global-route', () => {
 
     try {
       await Swagger.run();
-    } catch (e) {
-      assert.equal(e.message, '类型 ? 不支持生成swagger');
+    } catch (e: unknown) {
+      assert.equal((e as Error).message, '类型 ? 不支持生成swagger');
     }
     const realCwd = process.cwd();
     process.chdir(`${process.cwd()}/test/cases`);

@@ -1,4 +1,4 @@
-import { Connection, Document, Model } from 'mongoose';
+import { Document, Model, Mongoose } from 'mongoose';
 
 import BaseApplication from '../common/abstractApplication';
 import { Redis } from 'ioredis';
@@ -22,8 +22,8 @@ export const useModel = <T extends Document>(name: string): Model<T> => {
  * 对于一些特殊场景，可以通过这个方法得到一个DB实例
  * @param name 
  */
-export const useDB = (name: string ='default'): Connection => {
-  return application?.db?.get(name) as Connection;
+export const useDB = (name: string ='default'): Mongoose => {
+  return application?.db?.get(name) as Mongoose;
 };
 
 /**

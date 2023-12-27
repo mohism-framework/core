@@ -17,7 +17,7 @@ describe('paramParse', () => {
     try {
       Parser(req)
     } catch (e) {
-      assert.equal(e.message, 'bad request, only support application/json');
+      assert.equal((e as Error).message, 'bad request, only support application/json');
     }
   });
 
@@ -31,7 +31,7 @@ describe('paramParse', () => {
     try {
       Parser(req)
     } catch (e) {
-      assert.equal(e.message, 'bad request, invalid json');
+      assert.equal((e as Error).message, 'bad request, invalid json');
     }
   });
 

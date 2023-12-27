@@ -61,7 +61,7 @@ describe('validate', () => {
     try {
       validate(ctx, rules)
     } catch (e) {
-      assert.equal(e.message, 'Validation Error: query.email must contains \'@\'')
+      assert.equal((e as Error).message, 'Validation Error: query.email must contains \'@\'')
     }
   });
 
@@ -82,7 +82,7 @@ describe('validate', () => {
     try {
       validate(ctx, rules)
     } catch (e) {
-      assert.equal(e.message, 'Validation Error: query.fav should NOT be one of ["arsenal","chelsea"]')
+      assert.equal((e as Error).message, 'Validation Error: query.fav should NOT be one of ["arsenal","chelsea"]')
     }
   });
 
@@ -103,7 +103,7 @@ describe('validate', () => {
     try {
       validate(ctx, rules)
     } catch (e) {
-      assert.equal(e.message, 'Validation Error: query.fav must be one of ["arsenal","chelsea"]')
+      assert.equal((e as Error).message, 'Validation Error: query.fav must be one of ["arsenal","chelsea"]')
     }
   });
 
@@ -124,7 +124,7 @@ describe('validate', () => {
     try {
       validate(ctx, rules)
     } catch (e) {
-      assert.equal(e.message, 'Validation Error: query.name length must in [5,10]')
+      assert.equal((e as Error).message, 'Validation Error: query.name length must in [5,10]')
     }
   });
 
@@ -145,7 +145,7 @@ describe('validate', () => {
     try {
       validate(ctx, rules)
     } catch (e) {
-      assert.equal(e.message, 'Validation Error: query.name length must in [5,10]')
+      assert.equal((e as Error).message, 'Validation Error: query.name length must in [5,10]')
     }
   });
 
@@ -166,7 +166,7 @@ describe('validate', () => {
     try {
       validate(ctx, rules)
     } catch (e) {
-      assert.equal(e.message, 'Validation Error: query.long must gt 10')
+      assert.equal((e as Error).message, 'Validation Error: query.long must gt 10')
     }
   });
 
@@ -187,7 +187,7 @@ describe('validate', () => {
     try {
       validate(ctx, rules)
     } catch (e) {
-      assert.equal(e.message, 'Validation Error: query.width must gte 11')
+      assert.equal((e as Error).message, 'Validation Error: query.width must gte 11')
     }
   });
 
@@ -208,7 +208,7 @@ describe('validate', () => {
     try {
       validate(ctx, rules)
     } catch (e) {
-      assert.equal(e.message, 'Validation Error: query.heigh must lt 20')
+      assert.equal((e as Error).message, 'Validation Error: query.heigh must lt 20')
     }
   });
 
@@ -229,7 +229,7 @@ describe('validate', () => {
     try {
       validate(ctx, rules)
     } catch (e) {
-      assert.equal(e.message, 'Validation Error: query.depth must lte 21')
+      assert.equal((e as Error).message, 'Validation Error: query.depth must lte 21')
     }
   });
 
@@ -248,7 +248,7 @@ describe('validate', () => {
     try {
       validate(ctx, rules)
     } catch (e) {
-      assert.equal(e.message, 'Required query.name')
+      assert.equal((e as Error).message, 'Required query.name')
     }
   });
 
@@ -269,7 +269,7 @@ describe('validate', () => {
     try {
       validate(ctx, rules)
     } catch (e) {
-      assert.equal(e.message, 'query.age must be NUMBER')
+      assert.equal((e as Error).message, 'query.age must be NUMBER')
     }
   });
 });

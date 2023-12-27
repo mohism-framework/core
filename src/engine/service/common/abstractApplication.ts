@@ -18,7 +18,7 @@ export type THooks = 'onReady' | 'onError';
 export default abstract class BaseApplication implements IApplication {
   protected basePath: string;
   protected _redis: Getter<Redis> | null;
-  protected _db: Getter<Connection> | null;
+  protected _db: Getter<Mongoose> | null;
   protected _models: Getter<Model<Document>> | null;
 
   constructor(basePath: string) {

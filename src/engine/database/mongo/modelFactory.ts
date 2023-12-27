@@ -1,6 +1,5 @@
 import { Dict, Maker } from '@mohism/utils';
-import { IMaker } from '@mohism/utils/dist/libs/lazy';
-import { Connection, Document, Model, Schema } from 'mongoose';
+import { Mongoose, Schema } from 'mongoose';
 
 import get from './connect';
 
@@ -24,13 +23,19 @@ export default Model('app', {
 });
  */
 
-export default (name: string, obj: Dict<any>, options: IModelOption = { connection: 'default' }): IMaker<Model<Document>> => {
-  return Maker(async () => {
-    const schema: Schema = new Schema(obj, {
-      versionKey: false,
-      timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
-    });
-    const conn: Connection = await get(options.connection);
-    return conn.model(name, schema);
-  });
+export default (
+  name: string,
+  obj: Dict<any>,
+  options: IModelOption = { connection: 'default' },
+) => {
+  return Maker(
+    async () => {
+      const schema: Schema = new Schema(obj, {
+        versionKey: false,
+        timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
+      });
+      const conn: Mongoose = await get(options.connection);
+      return conn.model(name, schema);
+    }
+  );
 };
